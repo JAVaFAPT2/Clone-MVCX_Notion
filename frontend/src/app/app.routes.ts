@@ -1,7 +1,8 @@
 import { Routes } from '@angular/router';
-import { PageEditorComponent } from './components/page-editor/page-editor.component';
+import { LoginComponent } from './components/login/login.component';
+import { AuthGuard } from './auth.guard';
 
 export const routes: Routes = [
-  { path: '', component: PageEditorComponent },
-  { path: '**', redirectTo: '' }
+  { path: 'login', component: LoginComponent },
+  { path: 'protected', canActivate: [AuthGuard], component: LoginComponent },
 ];
