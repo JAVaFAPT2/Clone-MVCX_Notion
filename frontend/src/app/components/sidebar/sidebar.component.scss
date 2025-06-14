@@ -1,0 +1,21 @@
+.sidebar {
+  width: 240px;
+  height: 100vh;
+  background-color: #f5f6f8;
+  padding: 1rem;
+  box-sizing: border-box;
+  ul {
+    list-style: none;
+    padding: 0;
+    li a {
+      text-decoration: none;
+      color: #333;
+      display: block;
+      padding: 0.5rem 0;
+      &:hover {
+        color: #000;
+        font-weight: 600;
+      }
+    }
+  }
+} 

@@ -1,0 +1,7 @@
+<nav class="sidebar">
+  <ul>
+    <li *ngFor="let link of links">
+      <a [routerLink]="link.path">{{ link.title }}</a>
+    </li>
+  </ul>
+</nav> 

@@ -1,0 +1,20 @@
+<div class="page-editor">
+  <div class="sidebar-list">
+    <h3>Pages</h3>
+    <ul>
+      <li *ngFor="let p of (pages$ | async)" (click)="select(p)" [class.active]="selected?.id === p.id">
+        <span>{{ p.title }}</span>
+        <button (click)="delete(p); $event.stopPropagation()">🗑️</button>
+      </li>
+    </ul>
+  </div>
+
+  <div class="editor-form">
+    <h3>{{ selected ? 'Edit page' : 'New page' }}</h3>
+    <form (ngSubmit)="save()" #f="ngForm">
+      <input type="text" placeholder="Title" [(ngModel)]="newTitle" name="title" required />
+      <textarea placeholder="Content" rows="10" [(ngModel)]="newContent" name="content"></textarea>
+      <button type="submit" [disabled]="!f.form.valid">Save</button>
+    </form>
+  </div>
+</div> 
