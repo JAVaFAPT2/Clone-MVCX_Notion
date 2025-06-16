@@ -1,31 +1,125 @@
 .page-editor {
-  max-width: 700px;
-  margin: 40px auto;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  padding: 32px;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
+
+.page-header {
+  margin-bottom: 30px;
+}
+
+.page-actions {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.action-button {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px;
+  background-color: #f5f5f5;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #e0e0e0;
+  }
+
+  &.save {
+    background-color: #e3f2fd;
+    &:hover {
+      background-color: #bbdefb;
+    }
+  }
+
+  &.delete {
+    background-color: #ffebee;
+    &:hover {
+      background-color: #ffcdd2;
+    }
+  }
+
+  .icon {
+    font-size: 16px;
+  }
+}
+
 .page-title {
-  font-size: 2rem;
+  width: 100%;
+  padding: 10px 0;
+  margin-bottom: 20px;
+  font-size: 36px;
   font-weight: bold;
   border: none;
   outline: none;
-  width: 100%;
-  margin-bottom: 24px;
+  background: transparent;
+  border-bottom: 1px solid #eee;
+
+  &:focus {
+    border-bottom: 1px solid #ccc;
+  }
 }
-.blocks {
+
+.page-blocks {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 5px;
 }
-button {
-  margin-top: 24px;
-  padding: 8px 24px;
-  font-size: 1rem;
-  border-radius: 4px;
-  border: none;
-  background: #0057ff;
-  color: #fff;
+
+.slash-commands {
+  position: absolute;
+  z-index: 100;
+  width: 300px;
+  max-height: 400px;
+  overflow-y: auto;
+  background-color: #fff;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 8px 0;
+  margin-top: 5px;
+  border: 1px solid #e0e0e0;
+}
+
+.slash-command-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
   cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover, &.active {
+    background-color: #f5f5f5;
+  }
+
+  .command-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    margin-right: 12px;
+    background-color: #f0f0f0;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+
+  .command-details {
+    flex: 1;
+
+    .command-label {
+      font-weight: 500;
+      margin-bottom: 2px;
+    }
+
+    .command-description {
+      font-size: 12px;
+      color: #666;
+    }
+  }
 } 

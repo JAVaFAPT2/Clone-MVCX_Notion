@@ -16,31 +16,116 @@
       <!-- Todo block -->
       <ng-container *ngIf="block.type === 'todo'">
         <input type="checkbox" 
-               [(ngModel)]="block.checked"
-               (change)="update.emit(block)"
+               [checked]="block.checked"
+               (change)="onCheckboxChange($event)"
                class="todo-checkbox">
         <input #contentInput
                type="text"
-               [id]="block.id"
-               [ngModel]="getBlockText(block)"
-               (ngModelChange)="onContentChange($event)"
+               [ngModel]="getBlockText()"
+               (ngModelChange)="updateBlockText($event)"
                (keydown)="onKeyDown($event)"
                [placeholder]="getPlaceholder()"
-               class="block-input todo-input">
+               class="content-input">
       </ng-container>
 
-      <!-- Other block types -->
-      <ng-container *ngIf="block.type !== 'todo'">
+      <!-- Heading 1 -->
+      <ng-container *ngIf="block.type === 'heading1'">
         <input #contentInput
                type="text"
-               [id]="block.id"
-               [ngModel]="getBlockText(block)"
-               (ngModelChange)="onContentChange($event)"
+               [ngModel]="getBlockText()"
+               (ngModelChange)="updateBlockText($event)"
                (keydown)="onKeyDown($event)"
                [placeholder]="getPlaceholder()"
-               [class]="'block-input ' + block.type + '-input'">
+               class="content-input heading1">
+      </ng-container>
+
+      <!-- Heading 2 -->
+      <ng-container *ngIf="block.type === 'heading2'">
+        <input #contentInput
+               type="text"
+               [ngModel]="getBlockText()"
+               (ngModelChange)="updateBlockText($event)"
+               (keydown)="onKeyDown($event)"
+               [placeholder]="getPlaceholder()"
+               class="content-input heading2">
+      </ng-container>
+
+      <!-- Bulleted list -->
+      <ng-container *ngIf="block.type === 'bulleted_list'">
+        <span class="bullet-marker">•</span>
+        <input #contentInput
+               type="text"
+               [ngModel]="getBlockText()"
+               (ngModelChange)="updateBlockText($event)"
+               (keydown)="onKeyDown($event)"
+               [placeholder]="getPlaceholder()"
+               class="content-input">
+      </ng-container>
+
+      <!-- Numbered list -->
+      <ng-container *ngIf="block.type === 'numbered'">
+        <span class="number-marker">1.</span>
+        <input #contentInput
+               type="text"
+               [ngModel]="getBlockText()"
+               (ngModelChange)="updateBlockText($event)"
+               (keydown)="onKeyDown($event)"
+               [placeholder]="getPlaceholder()"
+               class="content-input">
+      </ng-container>
+
+      <!-- Quote -->
+      <ng-container *ngIf="block.type === 'quote'">
+        <span class="quote-marker">"</span>
+        <input #contentInput
+               type="text"
+               [ngModel]="getBlockText()"
+               (ngModelChange)="updateBlockText($event)"
+               (keydown)="onKeyDown($event)"
+               [placeholder]="getPlaceholder()"
+               class="content-input quote">
+      </ng-container>
+
+      <!-- Code -->
+      <ng-container *ngIf="block.type === 'code'">
+        <textarea #contentInput
+                  [ngModel]="getBlockText()"
+                  (ngModelChange)="updateBlockText($event)"
+                  (keydown)="onKeyDown($event)"
+                  [placeholder]="getPlaceholder()"
+                  class="content-input code"
+                  rows="3"></textarea>
+      </ng-container>
+
+      <!-- Callout -->
+      <ng-container *ngIf="block.type === 'callout'">
+        <span class="callout-icon">💡</span>
+        <input #contentInput
+               type="text"
+               [ngModel]="getBlockText()"
+               (ngModelChange)="updateBlockText($event)"
+               (keydown)="onKeyDown($event)"
+               [placeholder]="getPlaceholder()"
+               class="content-input callout">
+      </ng-container>
+
+      <!-- Default paragraph -->
+      <ng-container *ngIf="block.type === 'paragraph'">
+        <input #contentInput
+               type="text"
+               [ngModel]="getBlockText()"
+               (ngModelChange)="updateBlockText($event)"
+               (keydown)="onKeyDown($event)"
+               [placeholder]="getPlaceholder()"
+               class="content-input">
       </ng-container>
     </div>
+  </div>
+
+  <!-- Block actions -->
+  <div class="block-actions">
+    <button class="action-button add" (click)="addBelow.emit()" title="Add block below">+</button>
+    <button class="action-button remove" (click)="remove.emit()" title="Remove block">×</button>
   </div>
 </div>
 
@@ -48,23 +133,30 @@
 .block {
   display: flex;
   align-items: flex-start;
-  gap: 8px;
-  padding: 4px 0;
-  min-height: 32px;
+  padding: 8px 0;
+  position: relative;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.block:hover {
+  background: #f9f9f9;
 }
 
 .block-content {
   display: flex;
   align-items: flex-start;
-  gap: 8px;
   flex: 1;
 }
 
 .block-type-selector {
   display: flex;
-  gap: 4px;
+  flex-direction: column;
+  margin-right: 10px;
   opacity: 0;
   transition: opacity 0.2s;
+  position: relative;
+  width: 30px;
 }
 
 .block:hover .block-type-selector {
@@ -72,23 +164,22 @@
 }
 
 .type-button {
-  padding: 4px;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border: none;
-  background: none;
+  background: transparent;
   cursor: pointer;
   border-radius: 4px;
-  font-size: 16px;
-  color: #666;
-  transition: all 0.2s;
+  font-size: 14px;
+  color: #777;
+  margin-bottom: 2px;
 }
 
-.type-button:hover {
-  background: #f5f5f5;
-  color: #333;
-}
-
-.type-button.active {
-  background: #e0e0e0;
+.type-button:hover, .type-button.active {
+  background: #eee;
   color: #333;
 }
 
@@ -96,76 +187,128 @@
   flex: 1;
   display: flex;
   align-items: center;
-  gap: 8px;
 }
 
-.block-input {
+.content-input {
   flex: 1;
   border: none;
-  outline: none;
-  padding: 4px 8px;
-  font-size: 16px;
   background: transparent;
-  min-height: 24px;
+  font-size: 16px;
+  padding: 6px 0;
+  outline: none;
+  width: 100%;
 }
 
-.block-input::placeholder {
-  color: #999;
-}
-
-/* Block type specific styles */
-.heading-input {
-  font-size: 24px;
-  font-weight: 700;
-}
-
-.heading2-input {
-  font-size: 20px;
-  font-weight: 600;
-}
-
-.quote-input {
-  font-style: italic;
-  border-left: 3px solid #e0e0e0;
-  padding-left: 12px;
-}
-
-.code-input {
-  font-family: monospace;
-  background: #f5f5f5;
-  border-radius: 4px;
-}
-
-.callout-input {
-  background: #fff8e1;
-  border-radius: 4px;
-  padding: 8px 12px;
+.content-input::placeholder {
+  color: #aaa;
 }
 
 .todo-checkbox {
-  margin: 0;
+  margin-right: 10px;
   width: 18px;
   height: 18px;
   cursor: pointer;
 }
 
-.todo-input {
-  text-decoration: line-through;
+.content-input.heading1 {
+  font-size: 24px;
+  font-weight: bold;
 }
 
-.todo-input:not([checked]) {
-  text-decoration: none;
+.content-input.heading2 {
+  font-size: 20px;
+  font-weight: bold;
 }
 
-.bulleted-input::before {
-  content: '•';
-  margin-right: 8px;
-  color: #666;
+.content-input.quote {
+  font-style: italic;
+  color: #555;
 }
 
-.numbered-input::before {
-  content: '1.';
-  margin-right: 8px;
-  color: #666;
+.content-input.code {
+  font-family: monospace;
+  background: #f5f5f5;
+  padding: 8px;
+  border-radius: 4px;
+  white-space: pre;
+  width: 100%;
+  resize: vertical;
+}
+
+.content-input.callout {
+  font-weight: 500;
+}
+
+.bullet-marker, .number-marker, .quote-marker, .callout-icon {
+  margin-right: 10px;
+  color: #777;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+}
+
+.callout-icon {
+  font-size: 20px;
+}
+
+.block-actions {
+  display: flex;
+  opacity: 0;
+  transition: opacity 0.2s;
+  position: absolute;
+  right: -40px;
+  top: 8px;
+}
+
+.block:hover .block-actions {
+  opacity: 1;
+}
+
+.action-button {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: #eee;
+  cursor: pointer;
+  border-radius: 4px;
+  margin-left: 4px;
+  font-size: 14px;
+  color: #555;
+}
+
+.action-button:hover {
+  background: #ddd;
+  color: #333;
+}
+
+.action-button.remove:hover {
+  background: #ffebee;
+  color: #d32f2f;
+}
+
+/* Block type specific styles */
+.block-callout {
+  background-color: #f8f9fa;
+  border-left: 4px solid #4f8cff;
+  padding-left: 12px;
+  border-radius: 0 4px 4px 0;
+}
+
+.block-quote {
+  border-left: 3px solid #ddd;
+  padding-left: 12px;
+  color: #555;
+}
+
+.block-code {
+  font-family: monospace;
+  background: #f5f5f5;
+  border-radius: 4px;
+  padding: 4px 8px;
 }
 </style> 

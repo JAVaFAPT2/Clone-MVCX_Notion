@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BlockComponent } from '../block/block.component';
-import { Block, BlockType } from '../../models/block.model';
+import { Block, BlockType, createBlock, fromBackendBlock } from '../../models/block.model';
 import { Page } from '../../models/page.model';
 import { PageService } from '../../services/page.service';
 
@@ -53,6 +53,11 @@ export class PageEditorComponent implements OnInit {
     const pageId = this.router.url.split('/').pop();
     if (pageId && pageId !== 'new') {
       this.loadPage(pageId);
+    } else {
+      // Ensure we have at least one block for a new page
+      if (this.page.blocks.length === 0) {
+        this.page.blocks.push(createBlock('paragraph', ''));
+      }
     }
   }
 
@@ -60,6 +65,24 @@ export class PageEditorComponent implements OnInit {
     this.pageService.getPage(id).subscribe({
       next: (page) => {
         if (page) {
+          // Ensure blocks are properly converted from backend format
+          if (page.blocks && page.blocks.length > 0) {
+            page.blocks = page.blocks.map(block => {
+              // If the block came from the backend and doesn't have a proper format
+              if (typeof block.type === 'string' && block.type.toUpperCase() === block.type) {
+                return fromBackendBlock({
+                  id: block.id || `block_${Date.now()}`,
+                  type: block.type.toLowerCase(),
+                  content: block.content || '',
+                  checked: block.checked
+                });
+              }
+              return block;
+            });
+          } else {
+            // Ensure we have at least one block
+            page.blocks = [createBlock('paragraph', '')];
+          }
           this.page = page;
         } else {
           console.error('Page not found');
@@ -83,12 +106,10 @@ export class PageEditorComponent implements OnInit {
   }
 
   onBlockAddBelow(index: number) {
-    const newBlock: Block = {
-      id: `new_${Date.now()}`,
-      type: 'paragraph',
-      content: ''
-    };
+    const newBlock: Block = createBlock('paragraph', '');
     this.page.blocks.splice(index + 1, 0, newBlock);
+    // Hide slash commands when adding a new block
+    this.showSlashCommands = false;
   }
 
   onBlockKeyDown(event: KeyboardEvent, index: number) {
@@ -122,13 +143,22 @@ export class PageEditorComponent implements OnInit {
   }
 
   applySlashCommand(index: number) {
+    if (!this.showSlashCommands) return;
+    
     const command = this.slashCommands[this.currentSlashCommandIndex];
-    this.page.blocks[index] = {
-      ...this.page.blocks[index],
-      type: command.type,
-      content: ''
-    };
+    console.log('Applying slash command:', command.type, 'to block at index', index);
+    
+    // Create a new block with the selected type
+    const newBlock = createBlock(command.type, '');
+    
+    // Replace the current block with the new block
+    this.page.blocks[index] = newBlock;
+    
+    // Hide the slash commands menu
     this.showSlashCommands = false;
+    
+    // Emit update to parent
+    this.onBlockUpdate(index, newBlock);
   }
 
   savePage() {
@@ -155,11 +185,7 @@ export class PageEditorComponent implements OnInit {
     
     // Ensure we have at least one block
     if (validBlocks.length === 0) {
-      validBlocks.push({
-        id: `new_${Date.now()}`,
-        type: 'paragraph',
-        content: 'Empty page'
-      });
+      validBlocks.push(createBlock('paragraph', 'Empty page'));
     }
     
     const pageToSave = { ...this.page, blocks: validBlocks };
@@ -233,6 +259,12 @@ export class PageEditorComponent implements OnInit {
 
   backToWorkspace() {
     this.router.navigate(['/workspace']);
+  }
+
+  // Handle clicking on a slash command menu item
+  selectSlashCommand(commandIndex: number, blockIndex: number) {
+    this.currentSlashCommandIndex = commandIndex;
+    this.applySlashCommand(blockIndex);
   }
 
   trackByBlockId(index: number, block: Block): string {
