@@ -2,27 +2,14 @@ import { Block } from './block.model';
 
 export interface Page {
   id?: string;
-  userId?: string;
-  parentId?: string | null;
-  order?: number;
+  title: string;
+  blocks: Block[];
   icon?: string;
-  title?: string;
-  blocks?: Block[];
-  convexDocId?: string | null;
+  updatedAt?: Date;
+  convexDocId?: string;
   linkedPageIds?: string[];
-  backlinkPageIds?: string[];
-  createdAt?: string | Date;
-  updatedAt?: string | Date;
-}
-
-export interface PageNode {
-  page: Page;
-  children: PageNode[];
-  level: number;
-  isExpanded?: boolean;
-}
-
-export interface MovePageRequest {
-  newParentId: string | null;
-  newOrder: number;
+  createdBy?: string;
+  lastEditedBy?: string;
+  isPublic?: boolean;
+  parentPageId?: string;
 } 

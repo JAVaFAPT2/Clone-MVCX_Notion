@@ -46,7 +46,7 @@ public class PageController {
             String userId = getAuthenticatedUser().getId();
             Page page = pageService.findById(id);
 
-            if (page == null || !page.getUserId().equals(userId)) {
+            if (page == null || page.getUserId() == null || !page.getUserId().equals(userId)) {
                 return ResponseEntity.notFound().build();
             }
             return ResponseEntity.ok(page);
@@ -74,9 +74,38 @@ public class PageController {
     public ResponseEntity<Page> update(@PathVariable String id, @RequestBody Page page) {
         try {
             String userId = getAuthenticatedUser().getId();
+            System.out.println("[DEBUG] Update request for page ID: " + id + " by user ID: " + userId);
+            System.out.println("[DEBUG] Update payload: " + page);
+            
+            Page existing = pageService.findById(id);
+            if (existing == null) {
+                System.out.println("[ERROR] Page not found with ID: " + id);
+                return ResponseEntity.notFound().build();
+            }
+            
+            System.out.println("[DEBUG] Existing page: " + existing);
+            
+            if (existing.getUserId() == null) {
+                System.out.println("[ERROR] Page has null userId: " + id);
+                return ResponseEntity.status(403).build();
+            }
+            
+            if (!existing.getUserId().equals(userId)) {
+                System.out.println("[ERROR] User not authorized to update page. Page owner: " + existing.getUserId() + ", requester: " + userId);
+                return ResponseEntity.status(403).build();
+            }
+            
             Page updated = pageService.update(id, page, userId);
-            return updated != null ? ResponseEntity.ok(updated) : ResponseEntity.status(403).build();
+            if (updated == null) {
+                System.out.println("[ERROR] Failed to update page: " + id);
+                return ResponseEntity.status(500).build();
+            }
+            
+            System.out.println("[DEBUG] Page updated successfully: " + updated);
+            return ResponseEntity.ok(updated);
         } catch (Exception e) {
+            System.out.println("[ERROR] Exception in update page: " + e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.internalServerError().build();
         }
     }
@@ -122,7 +151,7 @@ public class PageController {
             String userId = getAuthenticatedUser().getId();
             Page page = pageService.findById(id);
             
-            if (page == null || !page.getUserId().equals(userId)) {
+            if (page == null || page.getUserId() == null || !page.getUserId().equals(userId)) {
                 return ResponseEntity.notFound().build();
             }
             

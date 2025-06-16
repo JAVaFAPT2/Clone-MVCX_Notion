@@ -1,0 +1,35 @@
+<div class="block-editor-demo">
+  <h1>Block Editor Demo</h1>
+  <div class="blocks">
+    <ng-container *ngFor="let block of blocks; let i = index">
+      <app-block
+        [block]="block"
+        (update)="onBlockUpdate(i, $event)"
+        (remove)="onBlockRemove(i)"
+        (addBelow)="onBlockAddBelow(i)"
+        (keydown)="onBlockKeyDown($event, i)">
+      </app-block>
+    </ng-container>
+  </div>
+</div>
+
+<style>
+.block-editor-demo {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+h1 {
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+}
+
+.blocks {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+</style> 

@@ -37,7 +37,7 @@ public class CollaborativeController {
             String userId = getAuthenticatedUser().getId();
             Page page = pageService.findById(pageId);
             
-            if (page == null || !page.getUserId().equals(userId)) {
+            if (page == null || (page.getUserId() == null || !page.getUserId().equals(userId))) {
                 return ResponseEntity.notFound().build();
             }
 
@@ -81,7 +81,7 @@ public class CollaborativeController {
             String userId = getAuthenticatedUser().getId();
             Page page = pageService.findById(pageId);
             
-            if (page == null || !page.getUserId().equals(userId)) {
+            if (page == null || (page.getUserId() == null || !page.getUserId().equals(userId))) {
                 return ResponseEntity.notFound().build();
             }
 
@@ -137,7 +137,7 @@ public class CollaborativeController {
             String conflictResolution = (String) mergeData.get("resolution"); // "convex" or "local"
             
             Page page = pageService.findById(pageId);
-            if (page == null || !page.getUserId().equals(userId)) {
+            if (page == null || (page.getUserId() == null || !page.getUserId().equals(userId))) {
                 return ResponseEntity.notFound().build();
             }
 
@@ -257,7 +257,7 @@ public class CollaborativeController {
             String userId = getAuthenticatedUser().getId();
             Page page = pageService.findById(pageId);
             
-            if (page == null || !page.getUserId().equals(userId)) {
+            if (page == null || (page.getUserId() == null || !page.getUserId().equals(userId))) {
                 return ResponseEntity.notFound().build();
             }
 
@@ -288,7 +288,7 @@ public class CollaborativeController {
             String userId = getAuthenticatedUser().getId();
             Page page = pageService.findById(pageId);
             
-            if (page == null || !page.getUserId().equals(userId)) {
+            if (page == null || (page.getUserId() == null || !page.getUserId().equals(userId))) {
                 return ResponseEntity.notFound().build();
             }
 

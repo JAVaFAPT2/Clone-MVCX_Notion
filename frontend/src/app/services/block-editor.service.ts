@@ -18,9 +18,7 @@ export class BlockEditorService {
     clipboard: []
   });
 
-  getState(): Observable<BlockEditorState> {
-    return this.stateSubject.asObservable();
-  }
+  state$: Observable<BlockEditorState> = this.stateSubject.asObservable();
 
   getCurrentState(): BlockEditorState {
     return this.stateSubject.value;
@@ -47,61 +45,49 @@ export class BlockEditorService {
     });
   }
 
-  updateBlock(block: Block, index: number): void {
+  removeBlock(index: number): void {
     const state = this.stateSubject.value;
+    if (index < 0 || index >= state.blocks.length) return;
+
     const newBlocks = [...state.blocks];
-    newBlocks[index] = block;
+    newBlocks.splice(index, 1);
+    
+    this.stateSubject.next({
+      ...state,
+      blocks: newBlocks,
+      focusedBlockIndex: Math.min(index, newBlocks.length - 1)
+    });
+  }
+
+  updateBlock(index: number, updates: Partial<Block>): void {
+    const state = this.stateSubject.value;
+    if (index < 0 || index >= state.blocks.length) return;
+
+    const newBlocks = [...state.blocks];
+    newBlocks[index] = { ...newBlocks[index], ...updates };
     
     this.stateSubject.next({ ...state, blocks: newBlocks });
   }
 
-  deleteBlock(index: number): void {
+  updateBlockContent(index: number, content: string): void {
     const state = this.stateSubject.value;
-    const newBlocks = state.blocks.filter((_, i) => i !== index);
-    
-    this.stateSubject.next({ 
-      ...state, 
-      blocks: newBlocks,
-      focusedBlockIndex: null
-    });
-  }
+    if (index < 0 || index >= state.blocks.length) return;
 
-  duplicateBlock(index: number): void {
-    const state = this.stateSubject.value;
-    const blockToDuplicate = state.blocks[index];
-    const duplicatedBlock = { ...blockToDuplicate, id: createBlock(blockToDuplicate.type).id };
-    
     const newBlocks = [...state.blocks];
-    newBlocks.splice(index + 1, 0, duplicatedBlock);
+    newBlocks[index] = setBlockText(newBlocks[index], content);
     
-    this.stateSubject.next({ 
-      ...state, 
-      blocks: newBlocks,
-      focusedBlockIndex: index + 1
-    });
-  }
-
-  moveBlock(fromIndex: number, toIndex: number): void {
-    const state = this.stateSubject.value;
-    const newBlocks = [...state.blocks];
-    const [movedBlock] = newBlocks.splice(fromIndex, 1);
-    newBlocks.splice(toIndex, 0, movedBlock);
-    
-    this.stateSubject.next({ 
-      ...state, 
-      blocks: newBlocks,
-      focusedBlockIndex: toIndex
-    });
+    this.stateSubject.next({ ...state, blocks: newBlocks });
   }
 
   // Block Conversion
   convertBlock(index: number, newType: BlockType): void {
     const state = this.stateSubject.value;
+    if (index < 0 || index >= state.blocks.length) return;
+
     const block = state.blocks[index];
     const content = getBlockText(block);
     
     const convertedBlock = createBlock(newType, content, block.id);
-    convertedBlock.metadata = { ...block.metadata };
     
     const newBlocks = [...state.blocks];
     newBlocks[index] = convertedBlock;
@@ -115,7 +101,7 @@ export class BlockEditorService {
     const block = state.blocks[index];
     const formattedBlock = applyFormatting(block, start, end, format);
     
-    this.updateBlock(formattedBlock, index);
+    this.updateBlock(index, formattedBlock);
   }
 
   // Focus Management
@@ -133,34 +119,25 @@ export class BlockEditorService {
   // Clipboard Operations
   copyBlocks(indices: number[]): void {
     const state = this.stateSubject.value;
-    const blocksToCopy = indices.map(i => state.blocks[i]);
+    const blocksToCopy = indices
+      .filter(i => i >= 0 && i < state.blocks.length)
+      .map(i => state.blocks[i]);
+    
     this.stateSubject.next({ ...state, clipboard: blocksToCopy });
-  }
-
-  cutBlocks(indices: number[]): void {
-    this.copyBlocks(indices);
-    const state = this.stateSubject.value;
-    const newBlocks = state.blocks.filter((_, i) => !indices.includes(i));
-    this.stateSubject.next({ 
-      ...state, 
-      blocks: newBlocks,
-      selectedBlocks: [],
-      focusedBlockIndex: null
-    });
   }
 
   pasteBlocks(index: number): void {
     const state = this.stateSubject.value;
     if (state.clipboard.length === 0) return;
-    
+
     const newBlocks = [...state.blocks];
-    const pastedBlocks = state.clipboard.map(block => ({ ...block, id: createBlock(block.type).id }));
-    newBlocks.splice(index, 0, ...pastedBlocks);
+    const blocksToPaste = state.clipboard.map(block => createBlock(block.type, block.content));
+    newBlocks.splice(index, 0, ...blocksToPaste);
     
     this.stateSubject.next({ 
       ...state, 
       blocks: newBlocks,
-      focusedBlockIndex: index
+      focusedBlockIndex: index + blocksToPaste.length - 1
     });
   }
 
@@ -295,5 +272,14 @@ export class BlockEditorService {
     } catch (error) {
       console.error('Failed to import blocks:', error);
     }
+  }
+
+  clearState(): void {
+    this.stateSubject.next({
+      blocks: [],
+      focusedBlockIndex: null,
+      selectedBlocks: [],
+      clipboard: []
+    });
   }
 } 

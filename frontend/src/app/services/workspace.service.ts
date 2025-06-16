@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { map, tap, catchError } from 'rxjs/operators';
 import { Page } from '../models/page.model';
 import { PageService } from './page.service';
 import { getBlockText } from '../models/block.model';
@@ -25,14 +26,16 @@ export interface QuickAction {
 export class WorkspaceService {
   private stateSubject = new BehaviorSubject<WorkspaceState>({
     pages: [],
-    showWelcome: false,
-    isLoading: true,
+    showWelcome: true,
+    isLoading: false,
     lastVisitedPage: null,
     recentPages: []
   });
 
+  state$: Observable<WorkspaceState> = this.stateSubject.asObservable();
+
   constructor(private pageService: PageService) {
-    this.initializeWorkspace();
+    this.loadPages();
   }
 
   getState(): Observable<WorkspaceState> {
@@ -43,31 +46,22 @@ export class WorkspaceService {
     return this.stateSubject.value;
   }
 
-  private initializeWorkspace(): void {
-    this.loadPages();
-    this.loadUserPreferences();
-  }
-
   private loadPages(): void {
     this.setState({ isLoading: true });
-    
-    this.pageService.getPages().subscribe({
-      next: (pages) => {
-        this.setState({
+    this.pageService.getPages().pipe(
+      tap(pages => {
+        this.setState({ 
           pages,
-          showWelcome: pages.length === 0,
-          isLoading: false
+          isLoading: false,
+          showWelcome: pages.length === 0
         });
-      },
-      error: (error) => {
+      }),
+      catchError(error => {
         console.error('Failed to load pages:', error);
-        this.setState({
-          pages: [],
-          showWelcome: true,
-          isLoading: false
-        });
-      }
-    });
+        this.setState({ isLoading: false });
+        return [];
+      })
+    ).subscribe();
   }
 
   private loadUserPreferences(): void {

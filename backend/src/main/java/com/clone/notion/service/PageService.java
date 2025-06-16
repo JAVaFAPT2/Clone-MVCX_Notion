@@ -40,18 +40,63 @@ public class PageService {
     }
 
     public Page update(String id, Page updated, String userId) {
-        return pageRepository.findById(id).map(existing -> {
-            if (!existing.getUserId().equals(userId)) {
-                return null; // Or throw an exception for forbidden access
-            }
-            existing.setTitle(updated.getTitle());
-            existing.setParentId(updated.getParentId());
-            existing.setIcon(updated.getIcon());
-            existing.setBlocks(updated.getBlocks());
-            existing.setConvexDocId(updated.getConvexDocId());
-            existing.setUpdatedAt(Instant.now());
-            return pageRepository.save(existing);
-        }).orElse(null);
+        try {
+            System.out.println("[DEBUG] PageService.update called with id: " + id + ", userId: " + userId);
+            
+            return pageRepository.findById(id).map(existing -> {
+                System.out.println("[DEBUG] Found existing page: " + existing);
+                
+                if (existing.getUserId() == null) {
+                    System.out.println("[ERROR] Page has null userId: " + id);
+                    return null;
+                }
+                
+                if (!existing.getUserId().equals(userId)) {
+                    System.out.println("[ERROR] User not authorized to update page. Page owner: " + existing.getUserId() + ", requester: " + userId);
+                    return null;
+                }
+                
+                // Only update fields that are not null in the updated object
+                if (updated.getTitle() != null) {
+                    existing.setTitle(updated.getTitle());
+                }
+                
+                if (updated.getParentId() != null) {
+                    existing.setParentId(updated.getParentId());
+                }
+                
+                if (updated.getIcon() != null) {
+                    existing.setIcon(updated.getIcon());
+                }
+                
+                if (updated.getBlocks() != null) {
+                    existing.setBlocks(updated.getBlocks());
+                }
+                
+                if (updated.getConvexDocId() != null) {
+                    existing.setConvexDocId(updated.getConvexDocId());
+                }
+                
+                existing.setUpdatedAt(Instant.now());
+                
+                try {
+                    Page savedPage = pageRepository.save(existing);
+                    System.out.println("[DEBUG] Page updated successfully: " + savedPage);
+                    return savedPage;
+                } catch (Exception e) {
+                    System.out.println("[ERROR] Exception saving page: " + e.getMessage());
+                    e.printStackTrace();
+                    return null;
+                }
+            }).orElseGet(() -> {
+                System.out.println("[ERROR] Page not found with id: " + id);
+                return null;
+            });
+        } catch (Exception e) {
+            System.out.println("[ERROR] Exception in update method: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public boolean delete(String id, String userId) {
@@ -60,7 +105,7 @@ public class PageService {
         return pageRepository.findById(id).map(existing -> {
             System.out.println("Found page: " + existing.getTitle() + ", owner: " + existing.getUserId());
             
-            if (!existing.getUserId().equals(userId)) {
+            if (existing.getUserId() == null || !existing.getUserId().equals(userId)) {
                 System.out.println("User not authorized to delete this page");
                 return false;
             }
@@ -80,7 +125,7 @@ public class PageService {
 
     public Page updateConvexDocId(String id, String convexDocId, String userId) {
         return pageRepository.findById(id).map(existing -> {
-            if (!existing.getUserId().equals(userId)) {
+            if (existing.getUserId() == null || !existing.getUserId().equals(userId)) {
                 return null;
             }
             existing.setConvexDocId(convexDocId);
@@ -91,7 +136,7 @@ public class PageService {
 
     public Page syncWithConvex(String id, Page convexPage, String userId) {
         return pageRepository.findById(id).map(existing -> {
-            if (!existing.getUserId().equals(userId)) {
+            if (existing.getUserId() == null || !existing.getUserId().equals(userId)) {
                 return null;
             }
             // Sync content from Convex while preserving metadata
@@ -114,7 +159,7 @@ public class PageService {
 
     public Page updateTitle(String id, String title, String userId) {
         return pageRepository.findById(id).map(existing -> {
-            if (!existing.getUserId().equals(userId)) {
+            if (existing.getUserId() == null || !existing.getUserId().equals(userId)) {
                 return null;
             }
             existing.setTitle(title);
@@ -125,7 +170,7 @@ public class PageService {
 
     public Page updateIcon(String id, String icon, String userId) {
         return pageRepository.findById(id).map(existing -> {
-            if (!existing.getUserId().equals(userId)) {
+            if (existing.getUserId() == null || !existing.getUserId().equals(userId)) {
                 return null;
             }
             existing.setIcon(icon);
@@ -152,7 +197,7 @@ public class PageService {
 
     public Page movePage(String pageId, String newParentId, Integer newOrder, String userId) {
         return pageRepository.findById(pageId).map(existing -> {
-            if (!existing.getUserId().equals(userId)) {
+            if (existing.getUserId() == null || !existing.getUserId().equals(userId)) {
                 return null;
             }
             
@@ -180,7 +225,7 @@ public class PageService {
 
     public Page updateOrder(String pageId, Integer newOrder, String userId) {
         return pageRepository.findById(pageId).map(existing -> {
-            if (!existing.getUserId().equals(userId)) {
+            if (existing.getUserId() == null || !existing.getUserId().equals(userId)) {
                 return null;
             }
             

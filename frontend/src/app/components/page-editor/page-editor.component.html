@@ -1,0 +1,221 @@
+<div class="page-editor">
+  <div class="page-header">
+    <div class="page-actions">
+      <button type="button" class="action-button back" (click)="backToWorkspace()">
+        <span class="icon">←</span>
+        Back to Workspace
+      </button>
+      <button type="button" class="action-button save" (click)="savePage()">
+        <span class="icon">💾</span>
+        <span>Save</span>
+      </button>
+      <button type="button" class="action-button delete" (click)="deletePage()">
+        <span class="icon">🗑️</span>
+        Delete
+      </button>
+    </div>
+    <input 
+      type="text" 
+      [(ngModel)]="page.title" 
+      placeholder="Untitled"
+      (blur)="savePage()"
+      class="page-title">
+  </div>
+
+  <div class="blocks-container">
+    <div *ngFor="let block of page.blocks; let i = index; trackBy: trackByBlockId" class="block-wrapper">
+      <app-block
+        [block]="block"
+        (update)="onBlockUpdate(i, $event)"
+        (remove)="onBlockRemove(i)"
+        (addBelow)="onBlockAddBelow(i)"
+        (keydown)="onBlockKeyDown($event, i)">
+      </app-block>
+
+      <!-- Slash Command Menu -->
+      <div *ngIf="showSlashCommands && i === page.blocks.length - 1" 
+           class="slash-commands-menu">
+        <div *ngFor="let cmd of slashCommands; let cmdIndex = index"
+             [class.selected]="cmdIndex === currentSlashCommandIndex"
+             class="slash-command-item">
+          <span class="command-icon">{{cmd.icon}}</span>
+          <div class="command-details">
+            <div class="command-label">{{cmd.label}}</div>
+            <div class="command-description">{{cmd.description}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add new block button -->
+    <button type="button" *ngIf="page.blocks.length === 0" 
+            (click)="onBlockAddBelow(-1)"
+            class="add-block-button">
+      <span class="icon">+</span>
+      Add a block
+    </button>
+  </div>
+</div>
+
+<style>
+.page-editor {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 32px 16px 64px 16px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+}
+
+.page-header {
+  margin-bottom: 32px;
+}
+
+.page-actions {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.action-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 6px;
+  background: #f9f9f9;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 500;
+  transition: all 0.2s;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+}
+
+.action-button.save {
+  background: #4f8cff;
+  color: #fff;
+  border-color: #4f8cff;
+}
+
+.action-button.save:hover {
+  background: #2563eb;
+  border-color: #2563eb;
+}
+
+.action-button.back {
+  background: #f3f4f6;
+  color: #333;
+}
+
+.action-button.back:hover {
+  background: #e5e7eb;
+}
+
+.action-button.delete {
+  color: #dc3545;
+  border-color: #dc3545;
+  background: #fff;
+}
+
+.action-button.delete:hover {
+  background: #dc3545;
+  color: white;
+}
+
+.page-title {
+  width: 100%;
+  font-size: 40px;
+  font-weight: 700;
+  border: none;
+  outline: none;
+  padding: 10px 0;
+  margin-bottom: 20px;
+  background: transparent;
+}
+
+.page-title::placeholder {
+  color: #999;
+}
+
+.blocks-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.block-wrapper {
+  position: relative;
+}
+
+.slash-commands-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 300px;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  z-index: 1000;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.slash-command-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.slash-command-item:hover,
+.slash-command-item.selected {
+  background: #f5f5f5;
+}
+
+.command-icon {
+  font-size: 20px;
+  width: 24px;
+  text-align: center;
+}
+
+.command-details {
+  flex: 1;
+}
+
+.command-label {
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+
+.command-description {
+  font-size: 12px;
+  color: #666;
+}
+
+.add-block-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  border: 2px dashed #e0e0e0;
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+  width: 100%;
+  color: #666;
+  transition: all 0.2s;
+}
+
+.add-block-button:hover {
+  border-color: #999;
+  color: #333;
+}
+
+.icon {
+  font-size: 16px;
+}
+</style> 

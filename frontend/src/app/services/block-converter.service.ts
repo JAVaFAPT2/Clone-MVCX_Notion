@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Block, BlockType, createBlock, getBlockText } from '../models/block.model';
+import { Block, BlockType, createBlock, getBlockText, toBackendBlock, fromBackendBlock } from '../models/block.model';
 
 // Define a simple interface for page blocks (backend format)
 interface PageBlock {
   type: string;
   content: string;
+  checked?: boolean;
 }
 
 @Injectable({
@@ -16,24 +17,14 @@ export class BlockConverterService {
    * Convert Page Block to Editor Block
    */
   pageBlockToEditorBlock(pageBlock: PageBlock): Block {
-    return {
-      id: pageBlock.type + '_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
-      type: pageBlock.type as BlockType,
-      content: [{ text: pageBlock.content || '' }],
-      metadata: this.extractMetadata(pageBlock),
-      children: [],
-      order: 0
-    };
+    return fromBackendBlock(pageBlock);
   }
 
   /**
    * Convert Editor Block to Page Block
    */
   editorBlockToPageBlock(editorBlock: Block): PageBlock {
-    return {
-      type: editorBlock.type,
-      content: getBlockText(editorBlock)
-    };
+    return toBackendBlock(editorBlock);
   }
 
   /**
@@ -51,31 +42,10 @@ export class BlockConverterService {
   }
 
   /**
-   * Extract metadata from page block content
-   */
-  private extractMetadata(pageBlock: PageBlock): any {
-    const metadata: any = {};
-    
-    // Extract todo checked state
-    if (pageBlock.type === 'todo') {
-      const content = pageBlock.content || '';
-      metadata.checked = content.startsWith('[x]') || content.startsWith('[X]');
-    }
-    
-    // Extract toggle collapsed state
-    if (pageBlock.type === 'toggle') {
-      const content = pageBlock.content || '';
-      metadata.collapsed = content.startsWith('▼') || content.startsWith('▶');
-    }
-    
-    return metadata;
-  }
-
-  /**
    * Create a default editor block
    */
   createDefaultEditorBlock(): Block {
-    return createBlock('paragraph', '');
+    return createBlock('paragraph');
   }
 
   /**

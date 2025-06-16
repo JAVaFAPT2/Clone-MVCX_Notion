@@ -1,6 +1,8 @@
 package com.clone.notion.model;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -43,4 +45,40 @@ public class Page {
     private Instant createdAt;
 
     private Instant updatedAt;
+    
+    // Ensure blocks is never null
+    public List<Block> getBlocks() {
+        if (blocks == null) {
+            blocks = new ArrayList<>();
+        }
+        return blocks;
+    }
+    
+    // Ensure linkedPageIds is never null
+    public Set<String> getLinkedPageIds() {
+        if (linkedPageIds == null) {
+            linkedPageIds = new HashSet<>();
+        }
+        return linkedPageIds;
+    }
+    
+    // Ensure backlinkPageIds is never null
+    public Set<String> getBacklinkPageIds() {
+        if (backlinkPageIds == null) {
+            backlinkPageIds = new HashSet<>();
+        }
+        return backlinkPageIds;
+    }
+    
+    @Override
+    public String toString() {
+        return "Page{" +
+                "id='" + id + '\'' +
+                ", userId='" + userId + '\'' +
+                ", title='" + title + '\'' +
+                ", blocksCount=" + (blocks != null ? blocks.size() : 0) +
+                ", convexDocId='" + convexDocId + '\'' +
+                ", updatedAt=" + updatedAt +
+                '}';
+    }
 } 
