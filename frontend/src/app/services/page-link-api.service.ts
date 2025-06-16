@@ -46,6 +46,11 @@ export class PageLinkApiService {
     return this.http.get<PageLink[]>(`${this.base}/to/${pageId}`);
   }
 
+  /** Convenience: fetch Page objects that link to given page */
+  getBacklinkPages(pageId: string) {
+    return this.http.get<any[]>(`${this.base}/${pageId}/backlink-pages`);
+  }
+
   /**
    * Synchronise page links based on current block content.
    * Creates new links and removes obsolete ones.

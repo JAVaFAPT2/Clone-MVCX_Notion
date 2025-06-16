@@ -3,8 +3,9 @@
   <div *ngIf="loading">Loading…</div>
   <div *ngIf="!loading && backlinks.length === 0" class="empty">No backlinks yet</div>
   <ul *ngIf="backlinks.length > 0">
-    <li *ngFor="let link of backlinks" (click)="openPage(link.sourcePageId)">
-      → {{ link.sourcePageId }}
+    <li *ngFor="let p of backlinks" (click)="openPage(p.id)">
+      <span class="icon">{{p.icon || '📄'}}</span>
+      {{ p.title || p.id }}
     </li>
   </ul>
 </div> 

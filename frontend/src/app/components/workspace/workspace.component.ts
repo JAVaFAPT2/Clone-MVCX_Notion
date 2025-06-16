@@ -9,6 +9,7 @@ import { Page } from '../../models/page.model';
 import { Subject } from 'rxjs';
 import { SearchBarComponent } from '../search/search-bar.component';
 import { WorkspaceWelcomeComponent } from './workspace-welcome.component';
+import { ThemeService } from '../../services/theme.service';
 
 @Component({
   selector: 'app-workspace',
@@ -35,7 +36,8 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private pageService: PageService,
     private workspaceService: WorkspaceService,
-    private router: Router
+    private router: Router,
+    private theme: ThemeService
   ) {}
 
   ngOnInit() {
@@ -211,5 +213,9 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
 
   get showWelcome(): boolean {
     return this.workspaceState.showWelcome;
+  }
+
+  toggleDarkMode() {
+    this.theme.toggle();
   }
 } 

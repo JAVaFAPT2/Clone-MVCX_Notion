@@ -2,8 +2,9 @@
   <!-- Header -->
   <header class="workspace-header">
     <div class="header-left">
-      <h1 class="workspace-title">Notion Clone</h1>
+      <a routerLink="/" class="workspace-title logo-link" title="Home">Notion Clone</a>
       <div class="header-links">
+        <a routerLink="/workspace" class="header-link">Workspace</a>
         <a routerLink="/collaborative-example" class="header-link">Collaborative Demo</a>
         <a routerLink="/block-editor-demo" class="header-link">Block Editor Demo</a>
       </div>
@@ -15,6 +16,7 @@
       <div class="user-info" *ngIf="currentUser">
         <span class="username">{{ currentUser.username }}</span>
         <button class="logout-btn" (click)="logout()">Logout</button>
+        <button class="dm-toggle" (click)="toggleDarkMode()" title="Toggle dark mode">🌓</button>
       </div>
     </div>
   </header>

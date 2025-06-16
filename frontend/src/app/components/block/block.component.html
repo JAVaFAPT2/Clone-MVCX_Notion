@@ -127,6 +127,7 @@
   position: relative;
   border-radius: 4px;
   transition: background 0.2s;
+  padding-left: 24px; /* room for ghost bar */
 }
 
 .block:hover {
@@ -243,13 +244,29 @@
   font-size: 20px;
 }
 
+.block::before {
+  content: '';
+  position: absolute;
+  left: 8px;
+  top: 4px;
+  bottom: 4px;
+  width: 4px;
+  background: transparent;
+  border-radius: 2px;
+  transition: background 0.2s;
+}
+
+.block:hover::before {
+  background: #d0d0d0;
+}
+
 .block-actions {
   display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-left: 8px;
   opacity: 0;
-  transition: opacity 0.2s;
-  position: absolute;
-  right: -80px;
-  top: 8px;
+  transition: opacity 0.15s;
 }
 
 .block:hover .block-actions {

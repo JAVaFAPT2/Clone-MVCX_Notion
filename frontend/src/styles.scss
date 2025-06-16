@@ -3,3 +3,114 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Dark mode styles */
+body.dark-mode {
+  background-color: #121212;
+  color: #e1e1e1;
+}
+
+body.dark-mode .page-editor {
+  background-color: #1e1e1e;
+  box-shadow: none;
+  border: 1px solid #333;
+}
+
+body.dark-mode .action-button {
+  background-color: #2d3748; /* gray-800 */
+  color: #e1e1e1;
+  border-color: #4a5568; /* gray-700 */
+}
+
+body.dark-mode .action-button:hover {
+  background-color: #4a5568;
+}
+
+body.dark-mode .action-button.save {
+  background-color: #2563eb; /* blue-600 */
+  border-color: #2563eb;
+}
+
+body.dark-mode .blocks-container .slash-command-item:hover,
+body.dark-mode .blocks-container .slash-command-item.selected {
+  background-color: #2d3748;
+}
+
+body.dark-mode .add-block-button {
+  border-color: #4a5568;
+  color: #a0aec0;
+}
+
+body.dark-mode .add-block-button:hover {
+  border-color: #a0aec0;
+  color: #e2e8f0;
+}
+
+/* === Generic Tailwind utility overrides for dark mode === */
+body.dark-mode .bg-white {
+  background-color: #1e1e1e !important;
+}
+
+body.dark-mode .bg-gray-50 {
+  background-color: #262626 !important;
+}
+
+body.dark-mode .text-gray-700,
+body.dark-mode .text-gray-600,
+body.dark-mode .text-gray-500,
+body.dark-mode .text-gray-400 {
+  color: #d1d5db !important;
+}
+
+body.dark-mode .border,
+body.dark-mode .border-b,
+body.dark-mode .border-t,
+body.dark-mode .border-l,
+body.dark-mode .border-r {
+  border-color: #333 !important;
+}
+
+body.dark-mode .workspace-sidebar {
+  background-color: #1a1a1a !important;
+}
+
+body.dark-mode .page-item:hover {
+  background-color: #2a2a2a !important;
+}
+
+body.dark-mode .workspace-container {
+  background-color: #121212 !important;
+}
+body.dark-mode .workspace-header {
+  background-color: #1e1e1e !important;
+  border-color: #333 !important;
+  box-shadow: none !important;
+}
+body.dark-mode .workspace-main {
+  background-color: #1e1e1e !important;
+}
+body.dark-mode .sidebar-section {
+  border-color: #333 !important;
+}
+body.dark-mode .new-page-btn {
+  background-color: #2563eb !important;
+}
+body.dark-mode .page-item {
+  color: #e2e8f0 !important;
+}
+body.dark-mode .page-item:hover {
+  background-color: #2d3748 !important;
+}
+body.dark-mode .page-title {
+  color: #e2e8f0 !important;
+}
+body.dark-mode .username {
+  color: #e2e8f0 !important;
+}
+body.dark-mode .logout-btn {
+  background-color: #2d3748 !important;
+  color: #e2e8f0 !important;
+}
+body.dark-mode .logout-btn:hover {
+  background-color: #4a5568 !important;
+}

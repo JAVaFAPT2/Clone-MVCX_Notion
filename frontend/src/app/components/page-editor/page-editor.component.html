@@ -14,14 +14,24 @@
           <span class="icon">🗑️</span>
           Delete
         </button>
+        <button type="button" class="action-button settings" (click)="toggleDarkMode()">
+          <span class="icon">🌓</span>
+          Dark Mode
+        </button>
       </div>
-      <form [formGroup]="form" class="title-form">
-        <input 
-          type="text" 
-          formControlName="title" 
-          placeholder="Untitled"
-          class="page-title">
-      </form>
+      <div class="icon-title-wrapper" style="display:flex;align-items:center;gap:8px;">
+        <button type="button" class="icon-btn" (click)="iconPickerVisible=!iconPickerVisible">{{page.icon}}</button>
+        <div *ngIf="iconPickerVisible" class="icon-picker-popover">
+          <app-emoji-picker (select)="onIconSelected($event); iconPickerVisible=false"></app-emoji-picker>
+        </div>
+        <form [formGroup]="form" class="title-form" style="flex:1;">
+          <input 
+            type="text" 
+            formControlName="title" 
+            placeholder="Untitled"
+            class="page-title">
+        </form>
+      </div>
     </div>
 
     <div class="blocks-container">
@@ -36,7 +46,7 @@
         <!-- Slash Command Menu -->
         <div *ngIf="showSlashCommands && i === blocks.length - 1" 
              class="slash-commands-menu">
-          <div *ngFor="let cmd of slashCommands; let cmdIndex = index"
+          <div *ngFor="let cmd of filteredSlashCommands; let cmdIndex = index"
                [class.selected]="cmdIndex === currentSlashCommandIndex"
                class="slash-command-item"
                (click)="selectSlashCommand(cmdIndex, i)">
@@ -46,6 +56,7 @@
               <div class="command-description">{{cmd.description}}</div>
             </div>
           </div>
+          <div class="slash-hint" *ngIf="filteredSlashCommands.length === 0">No results for "{{slashFilter}}"</div>
         </div>
       </div>
 
@@ -60,7 +71,7 @@
   </div>
 
   <div class="backlinks-panel" style="flex:0;min-width:200px;">
-    <!-- Backlinks panel content -->
+    <app-backlinks-panel [pageId]="page.id || ''"></app-backlinks-panel>
   </div>
 </div>
 
@@ -128,6 +139,15 @@
 .action-button.delete:hover {
   background: #dc3545;
   color: white;
+}
+
+.action-button.settings {
+  background: #f3f4f6;
+  color: #333;
+}
+
+.action-button.settings:hover {
+  background: #e5e7eb;
 }
 
 .page-title {

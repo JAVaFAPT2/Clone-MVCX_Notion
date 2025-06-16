@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, FormArray } f
 import { Router } from '@angular/router';
 import { BlockComponent } from '../block/block.component';
 import { BacklinksPanelComponent } from '../backlinks-panel/backlinks-panel.component';
+import { EmojiPickerComponent } from '../emoji-picker/emoji-picker.component';
 import { Block, BlockType, createBlock, fromBackendBlock } from '../../models/block.model';
 import { Page } from '../../models/page.model';
 import { PageService } from '../../services/page.service';
@@ -11,6 +12,7 @@ import { PageDraftService } from '../../services/page-draft.service';
 import { BlocksFormBuilderService } from '../../services/blocks-form-builder.service';
 import { BlockFormUtil } from '../../utils/block-form.util';
 import { PageLinkApiService } from '../../services/page-link-api.service';
+import { ThemeService } from '../../services/theme.service';
 
 interface SlashCommand {
   type: BlockType | 'link';
@@ -24,7 +26,7 @@ interface SlashCommand {
   templateUrl: './page-editor.component.html',
   styleUrls: ['./page-editor.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, BlockComponent, BacklinksPanelComponent]
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, BlockComponent, BacklinksPanelComponent, EmojiPickerComponent]
 })
 export class PageEditorComponent implements OnInit {
   page: Page = {
@@ -50,6 +52,15 @@ export class PageEditorComponent implements OnInit {
     { type: 'link', label: 'Page link', icon: '🔗', description: 'Insert a link to another page' }
   ];
 
+  slashFilter = '';
+  get filteredSlashCommands(): SlashCommand[] {
+    if (!this.slashFilter) return this.slashCommands;
+    const q = this.slashFilter.toLowerCase();
+    return this.slashCommands.filter(c =>
+      c.label.toLowerCase().includes(q) || c.type.includes(q)
+    );
+  }
+
   form: FormGroup = this.fb.group({
     title: [''],
     blocks: this.fb.array([])
@@ -59,6 +70,8 @@ export class PageEditorComponent implements OnInit {
     return this.form.get('blocks') as FormArray<FormGroup>;
   }
 
+  iconPickerVisible = false;
+
   constructor(
     private pageService: PageService,
     private router: Router,
@@ -66,7 +79,8 @@ export class PageEditorComponent implements OnInit {
     private draftService: PageDraftService,
     private cdRef: ChangeDetectorRef,
     private blocksBuilder: BlocksFormBuilderService,
-    private pageLinkApi: PageLinkApiService
+    private pageLinkApi: PageLinkApiService,
+    private theme: ThemeService
   ) {}
 
   ngOnInit() {
@@ -166,23 +180,37 @@ export class PageEditorComponent implements OnInit {
       event.preventDefault();
       this.showSlashCommands = true;
       this.currentSlashCommandIndex = 0;
+      this.slashFilter = '';
       return;
     }
 
-    // Handle slash command navigation
+    // Handle slash command navigation & filtering
     if (this.showSlashCommands) {
+      if (event.key.length === 1 && event.key.match(/^[a-zA-Z0-9]$/)) {
+        this.slashFilter += event.key;
+        this.currentSlashCommandIndex = 0;
+        return;
+      }
+      if (event.key === 'Backspace' && this.slashFilter.length > 0) {
+        this.slashFilter = this.slashFilter.slice(0, -1);
+        this.currentSlashCommandIndex = 0;
+        return;
+      }
       if (event.key === 'ArrowDown') {
         event.preventDefault();
-        this.currentSlashCommandIndex = (this.currentSlashCommandIndex + 1) % this.slashCommands.length;
+        const len = this.filteredSlashCommands.length;
+        if (len) this.currentSlashCommandIndex = (this.currentSlashCommandIndex + 1) % len;
       } else if (event.key === 'ArrowUp') {
         event.preventDefault();
-        this.currentSlashCommandIndex = (this.currentSlashCommandIndex - 1 + this.slashCommands.length) % this.slashCommands.length;
+        const len = this.filteredSlashCommands.length;
+        if (len) this.currentSlashCommandIndex = (this.currentSlashCommandIndex - 1 + len) % len;
       } else if (event.key === 'Enter') {
         event.preventDefault();
         this.applySlashCommand(index);
       } else if (event.key === 'Escape') {
         event.preventDefault();
         this.showSlashCommands = false;
+        this.slashFilter = '';
       }
     }
   }
@@ -190,7 +218,12 @@ export class PageEditorComponent implements OnInit {
   applySlashCommand(index: number) {
     if (!this.showSlashCommands) return;
     
-    const command = this.slashCommands[this.currentSlashCommandIndex];
+    const list = this.filteredSlashCommands;
+    if (list.length === 0) return;
+    const command = list[this.currentSlashCommandIndex];
+    // reset filter
+    this.slashFilter = '';
+    
     console.log('Applying slash command:', command.type, 'to block at index', index);
     
     if ((command as any).type === 'link') {
@@ -401,5 +434,13 @@ export class PageEditorComponent implements OnInit {
   private initializeBlocksForm(blocks: Block[]) {
     this.blocks.clear();
     blocks.forEach(b => this.blocks.push(BlockFormUtil.createBlockGroup(this.fb, b)));
+  }
+
+  onIconSelected(icon: string) {
+    this.page.icon = icon;
+  }
+
+  toggleDarkMode() {
+    this.theme.toggle();
   }
 } 

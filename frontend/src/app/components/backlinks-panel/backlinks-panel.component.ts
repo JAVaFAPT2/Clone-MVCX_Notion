@@ -13,7 +13,7 @@ import { PageLinkApiService, PageLink } from '../../services/page-link-api.servi
 export class BacklinksPanelComponent implements OnChanges {
   @Input() pageId!: string;
 
-  backlinks: PageLink[] = [];
+  backlinks: any[] = [];
   loading = false;
 
   constructor(private pageLinkApi: PageLinkApiService, private router: Router) {}
@@ -26,9 +26,9 @@ export class BacklinksPanelComponent implements OnChanges {
 
   loadBacklinks() {
     this.loading = true;
-    this.pageLinkApi.getBacklinks(this.pageId).subscribe({
-      next: links => {
-        this.backlinks = links;
+    this.pageLinkApi.getBacklinkPages(this.pageId).subscribe({
+      next: pages => {
+        this.backlinks = pages;
         this.loading = false;
       },
       error: () => (this.loading = false)
