@@ -15,9 +15,10 @@ import lombok.RequiredArgsConstructor;
 public class PageService {
 
     private final PageRepository pageRepository;
+    private final PageLinkService pageLinkService;
 
     public List<Page> findAllByUserId(String userId) {
-        return pageRepository.findByUserId(userId);
+        return pageRepository.findByUserIdOrderByParentIdAscOrderAsc(userId);
     }
 
     public Page findById(String id) {
@@ -25,9 +26,16 @@ public class PageService {
     }
 
     public Page create(Page page, String userId) {
+        System.out.println("[DEBUG] Creating page for userId: " + userId);
         page.setUserId(userId);
         page.setCreatedAt(Instant.now());
         page.setUpdatedAt(Instant.now());
+        
+        // Set default order if not provided
+        if (page.getOrder() == null) {
+            page.setOrder(getNextOrderForParent(userId, page.getParentId()));
+        }
+        
         return pageRepository.save(page);
     }
 
@@ -47,11 +55,23 @@ public class PageService {
     }
 
     public boolean delete(String id, String userId) {
+        System.out.println("PageService.delete called with id: " + id + ", userId: " + userId);
+        
         return pageRepository.findById(id).map(existing -> {
+            System.out.println("Found page: " + existing.getTitle() + ", owner: " + existing.getUserId());
+            
             if (!existing.getUserId().equals(userId)) {
+                System.out.println("User not authorized to delete this page");
                 return false;
             }
+            
+            System.out.println("Deleting page: " + existing.getTitle());
+            
+            // Clean up all links for this page before deleting
+            pageLinkService.removeAllLinksForPage(id);
+            
             pageRepository.delete(existing);
+            System.out.println("Page deleted successfully");
             return true;
         }).orElse(false);
     }
@@ -83,10 +103,13 @@ public class PageService {
     }
 
     public List<Page> searchPages(String query, String userId) {
+        System.out.println("[DEBUG] searchPages called with query: '" + query + "', userId: " + userId);
         if (query == null || query.trim().isEmpty()) {
-            return pageRepository.findByUserId(userId);
+            return pageRepository.findByUserIdOrderByParentIdAscOrderAsc(userId);
         }
-        return pageRepository.searchByUserIdAndContent(userId, query.trim());
+        List<Page> results = pageRepository.searchByUserIdAndContent(userId, query.trim());
+        System.out.println("[DEBUG] searchPages found " + results.size() + " results");
+        return results;
     }
 
     public Page updateTitle(String id, String title, String userId) {
@@ -123,5 +146,101 @@ public class PageService {
 
     public boolean isConvexDocIdAvailable(String convexDocId) {
         return !pageRepository.existsByConvexDocId(convexDocId);
+    }
+
+    // New methods for hierarchical page management
+
+    public Page movePage(String pageId, String newParentId, Integer newOrder, String userId) {
+        return pageRepository.findById(pageId).map(existing -> {
+            if (!existing.getUserId().equals(userId)) {
+                return null;
+            }
+            
+            String oldParentId = existing.getParentId();
+            Integer oldOrder = existing.getOrder();
+            
+            // Update parent and order
+            existing.setParentId(newParentId);
+            existing.setOrder(newOrder);
+            existing.setUpdatedAt(Instant.now());
+            
+            // Reorder siblings in old parent
+            if (oldParentId != null && !oldParentId.equals(newParentId)) {
+                reorderSiblingsAfterMove(userId, oldParentId, oldOrder);
+            }
+            
+            // Reorder siblings in new parent
+            if (newParentId != null) {
+                reorderSiblingsAfterInsert(userId, newParentId, newOrder);
+            }
+            
+            return pageRepository.save(existing);
+        }).orElse(null);
+    }
+
+    public Page updateOrder(String pageId, Integer newOrder, String userId) {
+        return pageRepository.findById(pageId).map(existing -> {
+            if (!existing.getUserId().equals(userId)) {
+                return null;
+            }
+            
+            Integer oldOrder = existing.getOrder();
+            String parentId = existing.getParentId();
+            
+            existing.setOrder(newOrder);
+            existing.setUpdatedAt(Instant.now());
+            
+            // Reorder siblings
+            if (parentId != null) {
+                reorderSiblingsAfterMove(userId, parentId, oldOrder);
+                reorderSiblingsAfterInsert(userId, parentId, newOrder);
+            }
+            
+            return pageRepository.save(existing);
+        }).orElse(null);
+    }
+
+    private Integer getNextOrderForParent(String userId, String parentId) {
+        List<Page> siblings = pageRepository.findByUserIdAndParentIdOrderByOrderAsc(userId, parentId);
+        if (siblings.isEmpty()) {
+            return 0;
+        }
+        
+        // Find the maximum order value, handling null orders
+        Integer maxOrder = 0;
+        for (Page sibling : siblings) {
+            Integer order = sibling.getOrder();
+            if (order != null && order > maxOrder) {
+                maxOrder = order;
+            }
+        }
+        
+        return maxOrder + 1;
+    }
+
+    private void reorderSiblingsAfterMove(String userId, String parentId, Integer removedOrder) {
+        if (removedOrder == null) return; // Skip if no order to remove
+        
+        List<Page> siblings = pageRepository.findByUserIdAndParentIdOrderByOrderAsc(userId, parentId);
+        for (Page sibling : siblings) {
+            Integer order = sibling.getOrder();
+            if (order != null && order > removedOrder) {
+                sibling.setOrder(order - 1);
+                pageRepository.save(sibling);
+            }
+        }
+    }
+
+    private void reorderSiblingsAfterInsert(String userId, String parentId, Integer insertedOrder) {
+        if (insertedOrder == null) return; // Skip if no order to insert
+        
+        List<Page> siblings = pageRepository.findByUserIdAndParentIdOrderByOrderAsc(userId, parentId);
+        for (Page sibling : siblings) {
+            Integer order = sibling.getOrder();
+            if (order != null && order >= insertedOrder) {
+                sibling.setOrder(order + 1);
+                pageRepository.save(sibling);
+            }
+        }
     }
 } 

@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="6b67bc0e-7349-472e-9dd9-c0a01502cc99" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.cursor/environment.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/Clone-MVCX_Notion.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Clone-MVCX_Notion.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/discord.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/discord.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/clone/notion/config/WebSecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/clone/notion/config/WebSecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/clone/notion/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/clone/notion/controller/AuthController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/clone/notion/controller/CollaborativeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/clone/notion/controller/CollaborativeController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/clone/notion/controller/PageController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/clone/notion/controller/PageController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/clone/notion/model/Page.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/clone/notion/model/Page.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/clone/notion/payload/request/LoginRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/clone/notion/payload/request/LoginRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/clone/notion/repository/PageRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/clone/notion/repository/PageRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/clone/notion/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/clone/notion/repository/UserRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/clone/notion/security/jwt/AuthTokenFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/clone/notion/security/jwt/AuthTokenFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/clone/notion/security/services/UserDetailsServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/clone/notion/security/services/UserDetailsServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/clone/notion/service/PageService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/clone/notion/service/PageService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/application.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/NotionApplication.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/config/WebConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/config/WebSecurityConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/controller/AuthController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/controller/CollaborativeController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/controller/PageController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/model/Block$BlockBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/model/Block.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/model/ERole.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/model/Page$PageBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/model/Page.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/model/Role.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/model/User.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/payload/request/CollaborativeEditRequest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/payload/request/LoginRequest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/payload/request/SignupRequest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/payload/response/CollaborativeEditResponse.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/payload/response/JwtResponse.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/payload/response/MessageResponse.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/repository/PageRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/repository/RoleRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/repository/UserRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/security/jwt/AuthEntryPointJwt.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/security/jwt/AuthTokenFilter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/security/jwt/JwtUtils.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/security/services/UserDetailsImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/security/services/UserDetailsServiceImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/service/PageService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/angular.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/angular.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/app.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/app.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/app.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/app.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/app.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/app.config.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/app.routes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/app.routes.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/components/download.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/components/download.component.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/components/download.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/components/home.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/components/home.component.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/components/home.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/components/login/login.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/components/login/login.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/components/login/login.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/components/login/login.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/components/pricing.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/components/pricing.component.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/components/pricing.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/components/product.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/components/product.component.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/components/product.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/components/register.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/components/register.component.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/components/register.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/components/resources.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/components/resources.component.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/components/resources.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/components/solutions.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/components/solutions.component.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/components/solutions.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/services/auth.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/services/auth.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 2
+}</component>
+  <component name="ProjectId" id="2yXoxOeGjhoGLBv1T1m7L0vZd5O" />
+  <component name="ProjectViewState">
+    <option name="flattenModules" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.NotionApplication.executor": "Run",
+    "Maven.notion-backend [clean].executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.ChatTagsLlmMigration": "true",
+    "RunOnceActivity.ClientConfigCleanupMigration": "true",
+    "RunOnceActivity.CodyAccountHistoryMigration": "true",
+    "RunOnceActivity.CodyAccountsIdsRefresh": "true",
+    "RunOnceActivity.CodyAssignOrphanedChatsToActiveAccount": "true",
+    "RunOnceActivity.CodyConvertUrlToCodebaseName": "true",
+    "RunOnceActivity.CodyHistoryLlmMigration": "true",
+    "RunOnceActivity.CodyMigrateChatHistory-v2": "true",
+    "RunOnceActivity.CodyProjectSettingsMigration": "true",
+    "RunOnceActivity.DeprecatedChatLlmMigration": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.ToggleCodyToolWindowAfterMigration": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "Spring Boot.NotionApplication.executor": "Run",
+    "com.codeium.enabled": "true",
+    "dart.analysis.tool.window.visible": "false",
+    "git-widget-placeholder": "main",
+    "go.import.settings.migrated": "true",
+    "ignore.preview.features.used": "true",
+    "ignore.virus.scanning.warn.message": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15136719",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "configurable.group.appearance",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RunManager">
+    <configuration name="NotionApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="notion-backend" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.clone.notion.NotionApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-fbdcb00ec9e3-intellij.indexing.shared.core-IU-251.25410.129" />
+        <option value="bundled-js-predefined-d6986cc7102b-6a121458b545-JavaScript-IU-251.25410.129" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SwiftWorkspaceSettings">
+    <option name="detectedToolchain" value="true" />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="6b67bc0e-7349-472e-9dd9-c0a01502cc99" name="Changes" comment="" />
+      <created>1749990527891</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1749990527891</updated>
+      <workItem from="1749990545317" duration="342000" />
+      <workItem from="1749990920075" duration="4840000" />
+      <workItem from="1750002574721" duration="26215000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

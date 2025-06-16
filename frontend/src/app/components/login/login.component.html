@@ -18,15 +18,15 @@
     <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
       <form (ngSubmit)="login()" class="space-y-6">
         <div>
-          <label for="username" class="block text-sm font-medium text-gray-700">
+          <label for="usernameOrEmail" class="block text-sm font-medium text-gray-700">
             Username or Email
           </label>
           <div class="mt-1">
             <input
-              id="username"
-              name="username"
+              id="usernameOrEmail"
+              name="usernameOrEmail"
               type="text"
-              [(ngModel)]="username"
+              [(ngModel)]="usernameOrEmail"
               required
               class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
               placeholder="Enter your username or email"

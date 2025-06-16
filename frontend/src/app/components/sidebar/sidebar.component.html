@@ -1,0 +1,25 @@
+<div class="sidebar">
+  <button (click)="createPage()">+ New Page</button>
+  <ul class="page-tree" cdkDropList (cdkDropListDropped)="drop($event)">
+    <ng-container *ngFor="let page of pageTree; let i = index">
+      <ng-template [ngTemplateOutlet]="treeNode" [ngTemplateOutletContext]="{ node: page, level: 0, parent: null, index: i }"></ng-template>
+    </ng-container>
+  </ul>
+</div>
+
+<ng-template #treeNode let-node let-level="level" let-parent="parent" let-index="index">
+  <li [class.selected]="selectedPageId === node.id" [style.paddingLeft.px]="level * 16" cdkDrag>
+    <span (click)="onPageClick(node)">
+      <span *ngIf="node.icon">{{ node.icon }}</span>
+      {{ node.title }}
+    </span>
+    <button (click)="createPage(node.id)" title="Add sub-page">+</button>
+    <button (click)="renamePage(node)" title="Rename">✏️</button>
+    <button (click)="deletePage(node)" title="Delete">🗑️</button>
+    <ul *ngIf="node.children && node.children.length" cdkDropList (cdkDropListDropped)="dropChild($event, node)">
+      <ng-container *ngFor="let child of node.children; let ci = index">
+        <ng-template [ngTemplateOutlet]="treeNode" [ngTemplateOutletContext]="{ node: child, level: level + 1, parent: node, index: ci }"></ng-template>
+      </ng-container>
+    </ul>
+  </li>
+</ng-template> 

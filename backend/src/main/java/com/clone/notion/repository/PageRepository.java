@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PageRepository extends MongoRepository<Page, String> {
-    List<Page> findByUserId(String userId);
+    List<Page> findByUserIdOrderByParentIdAscOrderAsc(String userId);
     
     List<Page> findByUserIdAndConvexDocIdIsNotNull(String userId);
     
@@ -22,4 +22,6 @@ public interface PageRepository extends MongoRepository<Page, String> {
     
     @Query("{'userId': ?0, 'convexDocId': {$ne: null}}")
     List<Page> findCollaborativePagesByUserId(String userId);
+    
+    List<Page> findByUserIdAndParentIdOrderByOrderAsc(String userId, String parentId);
 } 

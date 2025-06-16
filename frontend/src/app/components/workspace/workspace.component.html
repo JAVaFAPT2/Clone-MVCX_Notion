@@ -1,0 +1,98 @@
+<div class="workspace-container">
+  <!-- Header -->
+  <header class="workspace-header">
+    <div class="header-left">
+      <h1 class="workspace-title">Notion Clone</h1>
+      <div class="header-links">
+        <a routerLink="/collaborative-example" class="header-link">Collaborative Demo</a>
+        <a routerLink="/block-editor-demo" class="header-link">Block Editor Demo</a>
+      </div>
+    </div>
+    <div class="header-center">
+      <app-search-bar></app-search-bar>
+    </div>
+    <div class="header-right">
+      <div class="user-info" *ngIf="currentUser">
+        <span class="username">{{ currentUser.username }}</span>
+        <button class="logout-btn" (click)="logout()">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="workspace-main">
+    <!-- Sidebar -->
+    <aside class="workspace-sidebar">
+      <div class="sidebar-section">
+        <div class="section-header">
+          <h3>Pages</h3>
+          <button class="refresh-btn" (click)="refreshPages()" title="Refresh pages">
+            <span class="icon">↻</span>
+          </button>
+        </div>
+        <button class="new-page-btn" (click)="createNewPage()">
+          <span class="icon">+</span>
+          New Page
+        </button>
+      </div>
+      
+      <div class="pages-list" *ngIf="!loading && !error">
+        <div 
+          class="page-item" 
+          *ngFor="let page of pages" 
+          (click)="openPage(page.id!)"
+        >
+          <span class="page-icon">{{ page.icon || '📄' }}</span>
+          <div class="page-info">
+            <div class="page-title">{{ page.title || 'Untitled' }}</div>
+            <div class="page-date">{{ page.updatedAt | date:'short' }}</div>
+          </div>
+          <button 
+            class="delete-page-btn" 
+            (click)="deletePage(page.id!, $event)"
+            title="Delete page"
+          >
+            <span class="icon">×</span>
+          </button>
+        </div>
+        
+        <div class="no-pages" *ngIf="pages.length === 0">
+          <p>No pages yet. Create your first page!</p>
+        </div>
+      </div>
+
+      <div class="loading" *ngIf="loading">
+        <div class="spinner"></div>
+        <span>Loading pages...</span>
+      </div>
+
+      <div class="error" *ngIf="error">
+        <p class="error-message">{{ error }}</p>
+        <button class="retry-btn" (click)="refreshPages()">Retry</button>
+      </div>
+    </aside>
+
+    <!-- Content Area -->
+    <section class="workspace-content">
+      <router-outlet></router-outlet>
+      
+      <!-- Welcome Screen -->
+      <app-workspace-welcome 
+        *ngIf="showWelcome && !loading && !error && !isPageOpen()"
+        (actionClick)="onQuickAction($event)"
+        (templateClick)="onTemplateClick($event)">
+      </app-workspace-welcome>
+      
+      <div class="welcome-content" *ngIf="!loading && !error && !isPageOpen() && !showWelcome">
+        <div class="welcome-card">
+          <h2>Welcome to your workspace!</h2>
+          <p>Get started by creating your first page or opening an existing one.</p>
+          <div class="welcome-actions">
+            <button class="cta-btn" (click)="createNewPage()">Create New Page</button>
+            <a routerLink="/collaborative-example" class="demo-btn">Try Collaborative Editor</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div> 

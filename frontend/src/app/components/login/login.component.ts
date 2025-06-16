@@ -12,7 +12,7 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
-  username = '';
+  usernameOrEmail = '';
   password = '';
   error = '';
   loading = false;
@@ -22,10 +22,10 @@ export class LoginComponent {
   login() {
     this.loading = true;
     this.error = '';
-    this.auth.login({ username: this.username, password: this.password }).subscribe({
+    this.auth.login({ usernameOrEmail: this.usernameOrEmail, password: this.password }).subscribe({
       next: () => {
         this.loading = false;
-        this.router.navigate(['/']);
+        this.router.navigate(['/workspace']);
       },
       error: (err) => {
         this.loading = false;

@@ -11,18 +11,23 @@ import com.clone.notion.repository.RoleRepository;
 import com.clone.notion.repository.UserRepository;
 import com.clone.notion.security.jwt.JwtUtils;
 import com.clone.notion.security.services.UserDetailsImpl;
+import com.clone.notion.service.CookieService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -45,18 +50,25 @@ public class AuthController {
     @Autowired
     JwtUtils jwtUtils;
 
+    @Autowired
+    CookieService cookieService;
+
     @PostMapping("/signin")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest, 
+                                            HttpServletResponse response) {
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+                new UsernamePasswordAuthenticationToken(loginRequest.getUsernameOrEmail(), loginRequest.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateJwtToken(authentication);
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         List<String> roles = userDetails.getAuthorities().stream()
-                .map(item -> item.getAuthority())
+                .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
+
+        // Set authentication cookie
+        cookieService.setAuthCookie(response, jwt);
 
         return ResponseEntity.ok(new JwtResponse(jwt,
                 userDetails.getId(),
@@ -117,5 +129,36 @@ public class AuthController {
         userRepository.save(user);
 
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+    }
+
+    @PostMapping("/signout")
+    public ResponseEntity<?> logout(HttpServletResponse response) {
+        cookieService.clearAuthCookie(response);
+        return ResponseEntity.ok(new MessageResponse("Logged out successfully!"));
+    }
+
+    @PostMapping("/preferences")
+    public ResponseEntity<?> setPreferences(@RequestBody Map<String, Object> preferences, 
+                                          HttpServletResponse response) {
+        try {
+            // Convert preferences to JSON string (simplified)
+            String preferencesJson = preferences.toString();
+            cookieService.setPreferenceCookie(response, preferencesJson);
+            return ResponseEntity.ok(new MessageResponse("Preferences saved successfully!"));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(new MessageResponse("Failed to save preferences"));
+        }
+    }
+
+    @GetMapping("/preferences")
+    public ResponseEntity<Map<String, Object>> getPreferences(HttpServletRequest request) {
+        try {
+            String preferencesJson = cookieService.getPreferenceCookie(request);
+            Map<String, Object> preferences = preferencesJson != null ? 
+                Map.of("preferences", preferencesJson) : Map.of("preferences", "{}");
+            return ResponseEntity.ok(preferences);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(Map.of("error", "Failed to get preferences"));
+        }
     }
 } 

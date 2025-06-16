@@ -1,6 +1,10 @@
 {
   "name": "frontend",
   "version": "0.0.0",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -10,22 +14,30 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "^17.3.0",
-    "@angular/common": "^17.3.0",
-    "@angular/compiler": "^17.3.0",
-    "@angular/core": "^17.3.0",
-    "@angular/forms": "^17.3.0",
-    "@angular/platform-browser": "^17.3.0",
-    "@angular/platform-browser-dynamic": "^17.3.0",
-    "@angular/router": "^17.3.0",
+    "@angular/animations": "^20.0.2",
+    "@angular/cdk": "^20.0.3",
+    "@angular/common": "^20.0.2",
+    "@angular/compiler": "^20.0.2",
+    "@angular/core": "^20.0.2",
+    "@angular/forms": "^20.0.2",
+    "@angular/platform-browser": "^20.0.2",
+    "@angular/platform-browser-dynamic": "^20.0.2",
+    "@angular/router": "^20.0.2",
+    "@tiptap/core": "^2.14.0",
+    "@tiptap/extension-collaboration": "^2.14.0",
+    "@tiptap/extension-collaboration-cursor": "^2.14.0",
+    "@tiptap/pm": "^2.14.0",
+    "@tiptap/starter-kit": "^2.14.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
+    "y-websocket": "^3.0.0",
+    "yjs": "^13.6.27",
     "zone.js": "~0.14.3"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^17.3.1",
-    "@angular/cli": "^17.3.1",
-    "@angular/compiler-cli": "^17.3.0",
+    "@angular-devkit/build-angular": "^20.0.2",
+    "@angular/cli": "^20.0.2",
+    "@angular/compiler-cli": "^20.0.2",
     "@types/jasmine": "~5.1.0",
     "autoprefixer": "^10.4.21",
     "jasmine-core": "~5.1.0",
@@ -36,6 +48,6 @@
     "karma-jasmine-html-reporter": "~2.1.0",
     "postcss": "^8.5.5",
     "tailwindcss": "^3.4.17",
-    "typescript": "~5.4.2"
+    "typescript": "~5.8.3"
   }
 }

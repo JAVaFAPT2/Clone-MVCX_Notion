@@ -2,6 +2,7 @@ package com.clone.notion.model;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -25,6 +26,8 @@ public class Page {
 
     private String parentId; // For hierarchical pages
 
+    private Integer order; // For sibling ordering within the same parent
+
     private String icon; // e.g., an emoji or icon URL
 
     private String title;
@@ -32,6 +35,10 @@ public class Page {
     private List<Block> blocks;
 
     private String convexDocId; // ID for the document in Convex for collaborative editing
+
+    // Page linking fields
+    private Set<String> linkedPageIds; // Pages that this page links to
+    private Set<String> backlinkPageIds; // Pages that link to this page
 
     private Instant createdAt;
 
