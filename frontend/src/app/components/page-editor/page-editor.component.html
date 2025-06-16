@@ -1,60 +1,66 @@
-<div class="page-editor">
-  <div class="page-header">
-    <div class="page-actions">
-      <button type="button" class="action-button back" (click)="backToWorkspace()">
-        <span class="icon">←</span>
-        Back to Workspace
-      </button>
-      <button type="button" class="action-button save" (click)="savePage()">
-        <span class="icon">💾</span>
-        <span>Save</span>
-      </button>
-      <button type="button" class="action-button delete" (click)="deletePage()">
-        <span class="icon">🗑️</span>
-        Delete
-      </button>
+<div class="page-editor" style="display:flex;gap:24px;">
+  <div class="editor-area" style="flex:1;min-width:0;">
+    <div class="page-header">
+      <div class="page-actions">
+        <button type="button" class="action-button back" (click)="backToWorkspace()">
+          <span class="icon">←</span>
+          Back to Workspace
+        </button>
+        <button type="button" class="action-button save" (click)="savePage()">
+          <span class="icon">💾</span>
+          <span>{{saveInProgress ? 'Saving...' : 'Save'}}</span>
+        </button>
+        <button type="button" class="action-button delete" (click)="deletePage()">
+          <span class="icon">🗑️</span>
+          Delete
+        </button>
+      </div>
+      <form [formGroup]="form" class="title-form">
+        <input 
+          type="text" 
+          formControlName="title" 
+          placeholder="Untitled"
+          class="page-title">
+      </form>
     </div>
-    <input 
-      type="text" 
-      [(ngModel)]="page.title" 
-      placeholder="Untitled"
-      (blur)="savePage()"
-      class="page-title">
-  </div>
 
-  <div class="blocks-container">
-    <div *ngFor="let block of page.blocks; let i = index; trackBy: trackByBlockId" class="block-wrapper">
-      <app-block
-        [block]="block"
-        (update)="onBlockUpdate(i, $event)"
-        (remove)="onBlockRemove(i)"
-        (addBelow)="onBlockAddBelow(i)"
-        (keydown)="onBlockKeyDown($event, i)">
-      </app-block>
+    <div class="blocks-container">
+      <div *ngFor="let blockGroup of blocks.controls; let i = index" class="block-wrapper" [formGroup]="blockGroup">
+        <app-block
+          [group]="blockGroup"
+          (remove)="onBlockRemove(i)"
+          (addBelow)="onBlockAddBelow(i)"
+          (keydown)="onBlockKeyDown($event, i)">
+        </app-block>
 
-      <!-- Slash Command Menu -->
-      <div *ngIf="showSlashCommands && i === page.blocks.length - 1" 
-           class="slash-commands-menu">
-        <div *ngFor="let cmd of slashCommands; let cmdIndex = index"
-             [class.selected]="cmdIndex === currentSlashCommandIndex"
-             class="slash-command-item"
-             (click)="selectSlashCommand(cmdIndex, i)">
-          <span class="command-icon">{{cmd.icon}}</span>
-          <div class="command-details">
-            <div class="command-label">{{cmd.label}}</div>
-            <div class="command-description">{{cmd.description}}</div>
+        <!-- Slash Command Menu -->
+        <div *ngIf="showSlashCommands && i === blocks.length - 1" 
+             class="slash-commands-menu">
+          <div *ngFor="let cmd of slashCommands; let cmdIndex = index"
+               [class.selected]="cmdIndex === currentSlashCommandIndex"
+               class="slash-command-item"
+               (click)="selectSlashCommand(cmdIndex, i)">
+            <span class="command-icon">{{cmd.icon}}</span>
+            <div class="command-details">
+              <div class="command-label">{{cmd.label}}</div>
+              <div class="command-description">{{cmd.description}}</div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- Add new block button -->
-    <button type="button" *ngIf="page.blocks.length === 0" 
-            (click)="onBlockAddBelow(-1)"
-            class="add-block-button">
-      <span class="icon">+</span>
-      Add a block
-    </button>
+      <!-- Add new block button -->
+      <button type="button" *ngIf="blocks.length === 0" 
+              (click)="onBlockAddBelow(-1)"
+              class="add-block-button">
+        <span class="icon">+</span>
+        Add a block
+      </button>
+    </div>
+  </div>
+
+  <div class="backlinks-panel" style="flex:0;min-width:200px;">
+    <!-- Backlinks panel content -->
   </div>
 </div>
 

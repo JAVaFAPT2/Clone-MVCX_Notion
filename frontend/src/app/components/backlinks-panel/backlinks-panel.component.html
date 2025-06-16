@@ -1,0 +1,10 @@
+<div class="backlinks-panel">
+  <h3>Backlinks</h3>
+  <div *ngIf="loading">Loading…</div>
+  <div *ngIf="!loading && backlinks.length === 0" class="empty">No backlinks yet</div>
+  <ul *ngIf="backlinks.length > 0">
+    <li *ngFor="let link of backlinks" (click)="openPage(link.sourcePageId)">
+      → {{ link.sourcePageId }}
+    </li>
+  </ul>
+</div> 

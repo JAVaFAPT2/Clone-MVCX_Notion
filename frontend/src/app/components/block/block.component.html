@@ -1,4 +1,4 @@
-<div [class]="getBlockClass()">
+<div [formGroup]="group" [class]="getBlockClass()">
   <div class="block-content">
     <!-- Block type selector -->
     <div class="block-type-selector">
@@ -16,13 +16,11 @@
       <!-- Todo block -->
       <ng-container *ngIf="block.type === 'todo'">
         <input type="checkbox" 
-               [checked]="block.checked"
-               (change)="onCheckboxChange($event)"
+               formControlName="checked"
                class="todo-checkbox">
         <input #contentInput
                type="text"
-               [ngModel]="getBlockText()"
-               (ngModelChange)="updateBlockText($event)"
+               formControlName="content"
                (keydown)="onKeyDown($event)"
                [placeholder]="getPlaceholder()"
                class="content-input">
@@ -32,8 +30,7 @@
       <ng-container *ngIf="block.type === 'heading1'">
         <input #contentInput
                type="text"
-               [ngModel]="getBlockText()"
-               (ngModelChange)="updateBlockText($event)"
+               formControlName="content"
                (keydown)="onKeyDown($event)"
                [placeholder]="getPlaceholder()"
                class="content-input heading1">
@@ -43,8 +40,7 @@
       <ng-container *ngIf="block.type === 'heading2'">
         <input #contentInput
                type="text"
-               [ngModel]="getBlockText()"
-               (ngModelChange)="updateBlockText($event)"
+               formControlName="content"
                (keydown)="onKeyDown($event)"
                [placeholder]="getPlaceholder()"
                class="content-input heading2">
@@ -55,8 +51,7 @@
         <span class="bullet-marker">•</span>
         <input #contentInput
                type="text"
-               [ngModel]="getBlockText()"
-               (ngModelChange)="updateBlockText($event)"
+               formControlName="content"
                (keydown)="onKeyDown($event)"
                [placeholder]="getPlaceholder()"
                class="content-input">
@@ -67,8 +62,7 @@
         <span class="number-marker">1.</span>
         <input #contentInput
                type="text"
-               [ngModel]="getBlockText()"
-               (ngModelChange)="updateBlockText($event)"
+               formControlName="content"
                (keydown)="onKeyDown($event)"
                [placeholder]="getPlaceholder()"
                class="content-input">
@@ -79,8 +73,7 @@
         <span class="quote-marker">"</span>
         <input #contentInput
                type="text"
-               [ngModel]="getBlockText()"
-               (ngModelChange)="updateBlockText($event)"
+               formControlName="content"
                (keydown)="onKeyDown($event)"
                [placeholder]="getPlaceholder()"
                class="content-input quote">
@@ -89,8 +82,7 @@
       <!-- Code -->
       <ng-container *ngIf="block.type === 'code'">
         <textarea #contentInput
-                  [ngModel]="getBlockText()"
-                  (ngModelChange)="updateBlockText($event)"
+                  formControlName="content"
                   (keydown)="onKeyDown($event)"
                   [placeholder]="getPlaceholder()"
                   class="content-input code"
@@ -102,8 +94,7 @@
         <span class="callout-icon">💡</span>
         <input #contentInput
                type="text"
-               [ngModel]="getBlockText()"
-               (ngModelChange)="updateBlockText($event)"
+               formControlName="content"
                (keydown)="onKeyDown($event)"
                [placeholder]="getPlaceholder()"
                class="content-input callout">
@@ -113,8 +104,7 @@
       <ng-container *ngIf="block.type === 'paragraph'">
         <input #contentInput
                type="text"
-               [ngModel]="getBlockText()"
-               (ngModelChange)="updateBlockText($event)"
+               formControlName="content"
                (keydown)="onKeyDown($event)"
                [placeholder]="getPlaceholder()"
                class="content-input">
@@ -125,7 +115,7 @@
   <!-- Block actions -->
   <div class="block-actions">
     <button class="action-button add" (click)="addBelow.emit()" title="Add block below">+</button>
-    <button class="action-button remove" (click)="remove.emit()" title="Remove block">×</button>
+    <button class="action-button remove" (click)="remove.emit()" title="Remove block">🗑️</button>
   </div>
 </div>
 
@@ -258,7 +248,7 @@
   opacity: 0;
   transition: opacity 0.2s;
   position: absolute;
-  right: -40px;
+  right: -80px;
   top: 8px;
 }
 
@@ -267,8 +257,8 @@
 }
 
 .action-button {
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -276,8 +266,8 @@
   background: #eee;
   cursor: pointer;
   border-radius: 4px;
-  margin-left: 4px;
-  font-size: 14px;
+  margin-left: 6px;
+  font-size: 16px;
   color: #555;
 }
 
@@ -286,9 +276,25 @@
   color: #333;
 }
 
-.action-button.remove:hover {
+.action-button.add {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+.action-button.add:hover {
+  background: #bbdefb;
+  color: #0d47a1;
+}
+
+.action-button.remove {
   background: #ffebee;
   color: #d32f2f;
+}
+
+.action-button.remove:hover {
+  background: #ffcdd2;
+  color: #b71c1c;
+  transform: scale(1.05);
 }
 
 /* Block type specific styles */

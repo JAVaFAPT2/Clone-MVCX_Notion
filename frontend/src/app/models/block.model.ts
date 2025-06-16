@@ -45,16 +45,25 @@ function isBackendBlock(block: any): block is BackendBlock {
     block !== null &&
     typeof block.type === 'string' &&
     typeof block.content === 'string' &&
-    (block.checked === undefined || typeof block.checked === 'boolean')
+    (block.checked === undefined || block.checked === null || typeof block.checked === 'boolean')
   );
 }
 
 // Helper functions for block manipulation
 export function createBlock(type: BlockType, content: string | BlockContent[] = '', id?: string): Block {
+  // Generate a unique ID if not provided
+  const blockId = id || `${type}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  
+  // Ensure content is properly initialized even if empty
+  const blockContent = content === undefined ? '' : content;
+  
+  // Log block creation for debugging
+  console.log('Creating block:', 'Type:', type, 'Content:', blockContent, 'ID:', blockId);
+  
   return {
-    id: id || `${type}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+    id: blockId,
     type,
-    content: typeof content === 'string' ? content : content,
+    content: typeof blockContent === 'string' ? blockContent : blockContent,
     checked: type === 'todo' ? false : undefined
   };
 }
@@ -92,6 +101,7 @@ export function isValidBlockType(type: string): type is BlockType {
 
 // Convert backend block type to frontend block type
 export function convertBackendBlockType(type: string): BlockType {
+  const normalized = (type || '').toLowerCase();
   const validTypes: BlockType[] = [
     'paragraph', 
     'heading', 
@@ -105,12 +115,11 @@ export function convertBackendBlockType(type: string): BlockType {
     'code', 
     'callout'
   ];
-  
-  if (!type || !validTypes.includes(type as BlockType)) {
+  if (!validTypes.includes(normalized as BlockType)) {
     console.warn(`Invalid block type: ${type}, defaulting to paragraph`);
-    return 'paragraph'; // Default to paragraph for invalid types
+    return 'paragraph';
   }
-  return type as BlockType;
+  return normalized as BlockType;
 }
 
 // Convert frontend block to backend block format
@@ -123,15 +132,34 @@ export function toBackendBlock(block: Block): BackendBlock {
     };
   }
   
-  const content = isStringContent(block.content) 
-    ? block.content 
-    : block.content ? block.content.map(c => c.text).join('') : '';
+  // Make a defensive copy of the block to avoid mutation issues
+  const blockCopy = JSON.parse(JSON.stringify(block));
+  
+  // Handle content conversion, ensuring we always have a string even if empty
+  let content = '';
+  
+  if (isStringContent(blockCopy.content)) {
+    // If it's already a string, use it directly (even if empty)
+    content = blockCopy.content || '';
+  } else if (blockCopy.content) {
+    // If it's an array of BlockContent, join the text values
+    content = blockCopy.content.map((c: BlockContent) => c.text || '').join('');
+  }
+  
+  // Log the conversion for debugging
+  console.log('Converting block to backend format:', 
+    'ID:', blockCopy.id,
+    'Type:', blockCopy.type, 
+    'Original content type:', typeof blockCopy.content,
+    'Content length:', typeof content === 'string' ? content.length : 'N/A',
+    'Content sample:', typeof content === 'string' && content.length > 50 ? 
+      content.substring(0, 50) + '...' : content);
     
   const backendBlock: BackendBlock = {
-    id: block.id && block.id.startsWith('new_') ? undefined : block.id,
-    type: block.type || 'paragraph',
+    id: blockCopy.id && blockCopy.id.startsWith('new_') ? undefined : blockCopy.id,
+    type: blockCopy.type || 'paragraph',
     content,
-    checked: block.checked
+    checked: blockCopy.checked
   };
 
   return backendBlock;
@@ -150,9 +178,17 @@ export function fromBackendBlock(backendBlock: unknown): Block {
   }
 
   try {
+    // Ensure we handle content properly, even if it's null or undefined
+    const content = backendBlock.content !== undefined ? backendBlock.content : '';
+    
+    // Log the conversion for debugging
+    console.log('Converting backend block to frontend format:', 
+      'Type:', backendBlock.type, 
+      'Content:', content);
+    
     return createBlock(
       convertBackendBlockType(backendBlock.type),
-      backendBlock.content || '',
+      content,
       backendBlock.id
     );
   } catch (error) {

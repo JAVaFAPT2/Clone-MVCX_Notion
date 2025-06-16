@@ -1,26 +1,52 @@
 import { Component, Input, Output, EventEmitter, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Block, BlockType, getBlockText as modelGetBlockText, setBlockText, createBlock } from '../../models/block.model';
+import { Block, BlockType } from '../../models/block.model';
+import { FormGroup, ReactiveFormsModule, FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'app-block',
   templateUrl: './block.component.html',
   standalone: true,
-  imports: [CommonModule, FormsModule]
+  imports: [CommonModule, FormsModule, ReactiveFormsModule]
 })
 export class BlockComponent implements AfterViewInit {
-  @Input() set block(value: Block) {
-    this._block = value;
-    // Ensure block type is properly set
-    if (this._block && !this._block.type) {
-      this._block.type = 'paragraph';
+  @Input() group!: FormGroup;
+
+  constructor(private fb: FormBuilder) {}
+
+  // Legacy support for templates still using [block] binding (e.g., demo component)
+  @Input('block') set legacyBlock(value: Block | null) {
+    if (!value) return;
+    // When legacy binding used, ensure reactive group reflects incoming data
+    if (!this.group) {
+      this.group = this.fb.group({
+        id: [value.id],
+        type: [value.type],
+        content: [value.content],
+        checked: [value.checked ?? false]
+      });
+    } else {
+      this.group.patchValue({
+        id: value.id,
+        type: value.type,
+        content: value.content,
+        checked: value.checked ?? false,
+      }, { emitEvent: false });
     }
   }
-  get block(): Block {
-    return this._block;
+
+  get type(): string {
+    return this.group?.get('type')?.value;
   }
-  private _block!: Block;
+
+  get content(): string {
+    return this.group?.get('content')?.value;
+  }
+
+  get checked(): boolean {
+    return this.group?.get('checked')?.value;
+  }
 
   @Output() update = new EventEmitter<Block>();
   @Output() remove = new EventEmitter<void>();
@@ -49,53 +75,22 @@ export class BlockComponent implements AfterViewInit {
 
   getBlockClass(): string {
     const classes = ['block'];
-    if (this.block.type) {
-      classes.push(`block-${this.block.type}`);
+    if (this.type) {
+      classes.push(`block-${this.type}`);
     }
     return classes.join(' ');
   }
 
-  getBlockText(): string {
-    return modelGetBlockText(this.block);
-  }
-
-  updateBlockText(value: string) {
-    const updatedBlock = { ...this.block };
-    setBlockText(updatedBlock, value);
-    this.update.emit(updatedBlock);
-  }
-
   onTypeChange(type: BlockType) {
-    // Preserve the content when changing block type
-    const content = this.getBlockText();
-    
-    // Create a new block with the selected type but keep the same content
-    const newBlock = createBlock(type, content);
-    
-    // If it was a todo block and we're changing to another type, remove checked property
-    if (type !== 'todo') {
-      newBlock.checked = undefined;
-    } else if (type === 'todo') {
-      // Initialize checked state for new todo blocks
-      newBlock.checked = false;
-    }
-    
-    // Preserve the block ID if it exists
-    if (this.block.id) {
-      newBlock.id = this.block.id;
-    }
-    
-    this.update.emit(newBlock);
+    this.group.get('type')?.setValue(type);
   }
 
   onKeyDown(event: KeyboardEvent) {
     if (event.key === 'Enter' && !event.shiftKey) {
       event.preventDefault();
       this.addBelow.emit();
-    } else if (event.key === 'Backspace' && this.getBlockText() === '') {
-      event.preventDefault();
-      this.remove.emit();
     }
+    // Removed the backspace handler to prevent automatic block deletion
   }
 
   focus() {
@@ -105,7 +100,7 @@ export class BlockComponent implements AfterViewInit {
   }
 
   getPlaceholder(): string {
-    switch (this._block.type) {
+    switch (this.type) {
       case 'heading1': return 'Heading 1';
       case 'heading2': return 'Heading 2';
       case 'todo': return 'To-do';
@@ -120,8 +115,7 @@ export class BlockComponent implements AfterViewInit {
 
   onCheckboxChange(event: Event) {
     const target = event.target as HTMLInputElement;
-    const updatedBlock = { ...this.block, checked: target.checked };
-    this.update.emit(updatedBlock);
+    this.group.get('checked')?.setValue(target.checked);
   }
 
   onRemove() {
@@ -130,5 +124,10 @@ export class BlockComponent implements AfterViewInit {
 
   onAddBelow() {
     this.addBelow.emit();
+  }
+
+  // Legacy compatibility: expose 'block' for template logic
+  get block() {
+    return this.group?.value;
   }
 } 

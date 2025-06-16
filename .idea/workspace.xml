@@ -6,97 +6,13 @@
   <component name="ChangeListManager">
     <list default="true" id="6b67bc0e-7349-472e-9dd9-c0a01502cc99" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/clone/notion/controller/CollaborativeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/clone/notion/controller/CollaborativeController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/clone/notion/controller/PageController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/clone/notion/controller/PageController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/clone/notion/model/Block.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/clone/notion/model/Block.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/clone/notion/model/Page.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/clone/notion/model/Page.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/clone/notion/service/PageService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/clone/notion/service/PageService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/application.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/NotionApplication.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/config/CookieConfig.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/config/DataInitializer.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/config/WebConfig.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/config/WebSecurityConfig.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/controller/AuthController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/controller/CollaborativeController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/controller/CommentController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/controller/HealthController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/controller/PageController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/controller/PageLinkController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/controller/PageShareController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/controller/SearchController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/controller/StorageController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/controller/TemplateController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/exception/GlobalExceptionHandler.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/model/Block$BlockBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/model/Block.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/model/Comment$CommentBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/model/Comment.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/model/ERole.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/model/Page$PageBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/model/Page.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/model/PageLink$PageLinkBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/model/PageLink.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/model/PageShare$PageShareBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/model/PageShare.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/model/Permission.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/model/Role.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/model/Template$TemplateBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/model/Template.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/model/User.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/payload/request/CollaborativeEditRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/payload/request/LoginRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/payload/request/MovePageRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/payload/request/SignupRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/payload/response/CollaborativeEditResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/payload/response/JwtResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/payload/response/MessageResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/repository/CommentRepository.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/repository/PageLinkRepository.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/repository/PageRepository.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/repository/PageShareRepository.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/repository/RoleRepository.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/repository/TemplateRepository.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/repository/UserRepository.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/security/jwt/AuthEntryPointJwt.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/security/jwt/AuthTokenFilter.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/security/jwt/JwtUtils.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/security/services/UserDetailsImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/security/services/UserDetailsServiceImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/service/CommentService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/service/CookieService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/service/LocalStorageService$StorageItem.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/service/LocalStorageService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/service/PageLinkService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/service/PageService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/service/PageShareService$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/service/PageShareService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/clone/notion/service/TemplateService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/angular.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/angular.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/app.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/app.component.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/app.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/app.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/app.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/app.config.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/components/block-editor/block-editor.component.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/components/block-editor/block-editor.component.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/components/block-editor/slash-menu.component.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/components/blocks/special-block.component.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/components/blocks/special-block.component.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/components/blocks/text-block.component.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/components/blocks/text-block.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/components/block/block.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/components/block/block.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/components/block/block.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/components/block/block.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/components/page-editor/page-editor.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/components/page-editor/page-editor.component.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/app/components/page-editor/page-editor.component.scss" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/components/page-editor/page-editor.component.scss" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/app/components/page-editor/page-editor.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/components/page-editor/page-editor.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/components/page-editor/slash-menu.component.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/components/page-editor/slash-menu.component.ts" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/app/models/block.model.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/models/block.model.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/models/page.model.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/models/page.model.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/pages/block-editor-demo/block-editor-demo.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/pages/block-editor-demo/block-editor-demo.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/services/auth.interceptor.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/services/auth.interceptor.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/services/block-converter.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/services/block-converter.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/services/block-editor.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/services/block-editor.service.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/app/services/page.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/services/page.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/services/workspace.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/services/workspace.service.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -186,7 +102,7 @@
       <updated>1749990527891</updated>
       <workItem from="1749990545317" duration="342000" />
       <workItem from="1749990920075" duration="4840000" />
-      <workItem from="1750002574721" duration="34157000" />
+      <workItem from="1750002574721" duration="41281000" />
     </task>
     <servers />
   </component>

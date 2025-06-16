@@ -31,15 +31,44 @@ export class PageService {
     private debugService: DebugService
   ) {}
 
-  private convertPageForBackend(page: Page): Partial<BackendPage> {
+    private convertPageForBackend(page: Page): Partial<BackendPage> {
     if (!page) {
       console.error('Null or undefined page passed to convertPageForBackend');
       return { title: '', blocks: [] };
     }
+
+    // Log the page being converted
+    console.log('Converting page for backend:', JSON.stringify({
+      id: page.id,
+      title: page.title,
+      blockCount: page.blocks?.length || 0
+    }));
+
+    // Ensure blocks is an array
+    const blocks = Array.isArray(page.blocks) ? page.blocks : [];
     
-    const backendBlocks = (page.blocks || []).map(block => {
+    // Log each block before conversion
+    blocks.forEach((block, index) => {
+      console.log(`Pre-conversion block ${index}:`, 
+        'ID:', block.id,
+        'Type:', block.type,
+        'Content:', typeof block.content === 'string' ? 
+          (block.content.length > 50 ? block.content.substring(0, 50) + '...' : block.content) : 
+          'complex content'
+      );
+    });
+
+    const backendBlocks = blocks.map(block => {
       try {
-        return toBackendBlock(block);
+        const backendBlock = toBackendBlock(block);
+        // Log successful conversion
+        console.log(`Converted block ${block.id} to backend format:`, 
+          'Type:', backendBlock.type, 
+          'Content:', backendBlock.content.length > 50 ? 
+            backendBlock.content.substring(0, 50) + '...' : 
+            backendBlock.content
+        );
+        return backendBlock;
       } catch (error) {
         console.error('Error converting block to backend format:', error, block);
         // Return a default block if conversion fails
@@ -48,11 +77,19 @@ export class PageService {
     });
 
     // Only send the fields that are meant to be updated.
-    return {
+    const backendPage = {
       title: page.title || '',
       icon: page.icon,
       blocks: backendBlocks,
     };
+    
+    // Log the final backend payload
+    console.log('Final backend payload:', JSON.stringify({
+      title: backendPage.title,
+      blockCount: backendPage.blocks.length
+    }));
+    
+    return backendPage;
   }
 
   private convertPageFromBackend(backendPage: BackendPage): Page {
@@ -145,17 +182,35 @@ export class PageService {
     );
   }
 
-  savePage(page: Page): Observable<Page> {
+    savePage(page: Page): Observable<Page> {
     if (!page.id) {
       throw new Error('Page ID is required to save.');
     }
-    
+
     this.debugService.log('api', `Saving page with ID: ${page.id}`, { title: page.title });
-    
+
     try {
-      const backendPayload = this.convertPageForBackend(page);
-      this.debugService.log('api', 'Backend payload prepared', backendPayload);
+      // Make sure we're working with a copy of the page to prevent reference issues
+      const pageToSave = JSON.parse(JSON.stringify(page));
       
+      // Validate blocks before converting to backend format
+      if (!pageToSave.blocks || !Array.isArray(pageToSave.blocks)) {
+        this.debugService.warn('api', 'Page has no blocks or blocks is not an array, initializing empty array');
+        pageToSave.blocks = [];
+      }
+      
+      // Ensure each block has a valid type
+      pageToSave.blocks = pageToSave.blocks.map((block: any) => {
+        if (!block.type) {
+          this.debugService.warn('api', 'Block missing type, defaulting to paragraph', block);
+          block.type = 'paragraph';
+        }
+        return block;
+      });
+      
+      const backendPayload = this.convertPageForBackend(pageToSave);
+      this.debugService.log('api', 'Backend payload prepared', backendPayload);
+
       return this.http.put<any>(`${this.apiUrl}/${page.id}`, backendPayload).pipe(
         map(updatedPage => {
           this.debugService.log('api', 'Backend response received', updatedPage);
@@ -165,8 +220,12 @@ export class PageService {
             return convertedPage;
           } catch (error) {
             this.debugService.error('api', 'Error converting page from backend', error);
-            // Return original page if conversion fails
-            return page;
+            // Return a properly converted page instead of the original to ensure consistency
+            const safeConvertedPage = {
+              ...page,
+              blocks: page.blocks || []
+            };
+            return safeConvertedPage;
           }
         }),
         catchError(error => {

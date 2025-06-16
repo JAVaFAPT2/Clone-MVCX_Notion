@@ -1,14 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, FormArray } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BlockComponent } from '../block/block.component';
+import { BacklinksPanelComponent } from '../backlinks-panel/backlinks-panel.component';
 import { Block, BlockType, createBlock, fromBackendBlock } from '../../models/block.model';
 import { Page } from '../../models/page.model';
 import { PageService } from '../../services/page.service';
+import { PageDraftService } from '../../services/page-draft.service';
+import { BlocksFormBuilderService } from '../../services/blocks-form-builder.service';
+import { BlockFormUtil } from '../../utils/block-form.util';
+import { PageLinkApiService } from '../../services/page-link-api.service';
 
 interface SlashCommand {
-  type: BlockType;
+  type: BlockType | 'link';
   label: string;
   icon: string;
   description: string;
@@ -19,7 +24,7 @@ interface SlashCommand {
   templateUrl: './page-editor.component.html',
   styleUrls: ['./page-editor.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, BlockComponent]
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, BlockComponent, BacklinksPanelComponent]
 })
 export class PageEditorComponent implements OnInit {
   page: Page = {
@@ -29,6 +34,7 @@ export class PageEditorComponent implements OnInit {
     icon: '📄'
   };
 
+  saveInProgress = false;
   showSlashCommands = false;
   currentSlashCommandIndex = 0;
   slashCommands: SlashCommand[] = [
@@ -40,12 +46,27 @@ export class PageEditorComponent implements OnInit {
     { type: 'numbered', label: 'Numbered list', icon: '1.', description: 'Create a numbered list' },
     { type: 'quote', label: 'Quote', icon: '"', description: 'Capture a quote' },
     { type: 'code', label: 'Code', icon: '</>', description: 'Capture a code snippet' },
-    { type: 'callout', label: 'Callout', icon: '💡', description: 'Highlight important information' }
+    { type: 'callout', label: 'Callout', icon: '💡', description: 'Highlight important information' },
+    { type: 'link', label: 'Page link', icon: '🔗', description: 'Insert a link to another page' }
   ];
+
+  form: FormGroup = this.fb.group({
+    title: [''],
+    blocks: this.fb.array([])
+  });
+
+  get blocks(): FormArray<FormGroup> {
+    return this.form.get('blocks') as FormArray<FormGroup>;
+  }
 
   constructor(
     private pageService: PageService,
-    private router: Router
+    private router: Router,
+    private fb: FormBuilder,
+    private draftService: PageDraftService,
+    private cdRef: ChangeDetectorRef,
+    private blocksBuilder: BlocksFormBuilderService,
+    private pageLinkApi: PageLinkApiService
   ) {}
 
   ngOnInit() {
@@ -59,6 +80,22 @@ export class PageEditorComponent implements OnInit {
         this.page.blocks.push(createBlock('paragraph', ''));
       }
     }
+
+    // react to form changes
+    this.form.get('title')?.valueChanges.subscribe(title => {
+      this.page.title = title ?? '';
+      this.draftService.updateDraft({ title: this.page.title });
+    });
+
+    // initial blocks form array
+    this.initializeBlocksForm(this.page.blocks);
+
+    // react to form changes for blocks (mark draft dirty)
+    this.blocks.valueChanges.subscribe(arr => {
+      // update page.blocks snapshot for backwards compatibility
+      this.page.blocks = this.blocksBuilder.toBlocks(this.blocks);
+      this.draftService.updateDraft({ blocks: this.page.blocks });
+    });
   }
 
   loadPage(id: string) {
@@ -84,6 +121,9 @@ export class PageEditorComponent implements OnInit {
             page.blocks = [createBlock('paragraph', '')];
           }
           this.page = page;
+          this.form.patchValue({ title: this.page.title });
+          this.draftService.setDraft(this.page);
+          this.initializeBlocksForm(this.page.blocks);
         } else {
           console.error('Page not found');
           // Handle null page (e.g., redirect to 404 or workspace)
@@ -99,17 +139,22 @@ export class PageEditorComponent implements OnInit {
 
   onBlockUpdate(index: number, block: Block) {
     this.page.blocks[index] = block;
+    this.draftService.updateDraft({ blocks: this.page.blocks });
   }
 
   onBlockRemove(index: number) {
     this.page.blocks.splice(index, 1);
+    this.blocks.removeAt(index);
+    this.draftService.updateDraft({ blocks: this.page.blocks });
   }
 
   onBlockAddBelow(index: number) {
     const newBlock: Block = createBlock('paragraph', '');
     this.page.blocks.splice(index + 1, 0, newBlock);
+    this.blocks.insert(index + 1, BlockFormUtil.createBlockGroup(this.fb, newBlock));
     // Hide slash commands when adding a new block
     this.showSlashCommands = false;
+    this.draftService.updateDraft({ blocks: this.page.blocks });
   }
 
   onBlockKeyDown(event: KeyboardEvent, index: number) {
@@ -148,67 +193,119 @@ export class PageEditorComponent implements OnInit {
     const command = this.slashCommands[this.currentSlashCommandIndex];
     console.log('Applying slash command:', command.type, 'to block at index', index);
     
-    // Create a new block with the selected type
-    const newBlock = createBlock(command.type, '');
-    
-    // Replace the current block with the new block
+    if ((command as any).type === 'link') {
+      const linkText = prompt('Enter page title to link:');
+      if (linkText) {
+        const blockGroup = this.blocks.at(index) as FormGroup;
+        const current = blockGroup.get('content')?.value || '';
+        const newContent = `${current} [[${linkText}]]`;
+        blockGroup.get('content')?.setValue(newContent);
+        this.page.blocks[index].content = newContent;
+      }
+      // Hide menu and exit
+      this.showSlashCommands = false;
+      return;
+    }
+
+    // For other block-type commands
+    const currentContent = this.page.blocks[index]?.content || '';
+    const newBlock = createBlock(command.type as BlockType, currentContent as any);
     this.page.blocks[index] = newBlock;
-    
-    // Hide the slash commands menu
+    this.blocks.setControl(index, BlockFormUtil.createBlockGroup(this.fb, newBlock));
     this.showSlashCommands = false;
-    
-    // Emit update to parent
     this.onBlockUpdate(index, newBlock);
   }
 
   savePage() {
+    // Defer actual save to the next macrotask so the last ngModelChange
+    // event (if the user just finished typing) is processed first.
+    setTimeout(() => this.performSave(), 0);
+  }
+
+  private performSave() {
+    // flush pending value accessors
+    this.cdRef.detectChanges();
     console.log('Attempting to save page:', this.page);
     
-    // Filter out invalid or empty blocks before saving
-    const validBlocks = this.page.blocks.filter(block => {
-      if (!block || !block.type) {
-        console.warn('Invalid block found:', block);
-        return false;
-      }
-      
-      const hasType = !!block.type;
-      const hasContent = typeof block.content === 'string' 
-        ? (block.content?.trim().length > 0) 
-        : (block.content && block.content.some(c => c.text && c.text.trim().length > 0));
-      
-      if (!hasType || !hasContent) {
-        console.warn('Filtering out invalid block:', block);
-      }
-      
-      return hasType && hasContent;
-    });
+    // Set save in progress flag
+    this.saveInProgress = true;
     
-    // Ensure we have at least one block
+    // Create a deep copy of the page FIRST to avoid modifying the original
+    const pageCopy = JSON.parse(JSON.stringify(this.page));
+    
+    // Replace blocks from formArray to ensure latest text
+    pageCopy.blocks = this.blocksBuilder.toBlocks(this.blocks);
+    
+    // Filter out invalid blocks before saving, but keep empty blocks
+    const validBlocks = pageCopy.blocks.filter((block: any) => {
+      if (!block) return false;
+      if (!block.type) return false;
+
+      // Determine the textual content of the block
+      const textContent = typeof block.content === 'string'
+        ? block.content
+        : (block.content || []).map((c: any) => c.text || '').join('');
+
+      // Keep block only if it has non-empty content after trimming
+      return textContent.trim().length > 0;
+    });
+
+    // If all blocks were empty, add one default paragraph block
     if (validBlocks.length === 0) {
-      validBlocks.push(createBlock('paragraph', 'Empty page'));
+      validBlocks.push(createBlock('paragraph', ''));
     }
     
-    const pageToSave = { ...this.page, blocks: validBlocks };
-    console.log('Saving page with valid blocks:', pageToSave);
+    // Use the filtered blocks in our copy
+    pageCopy.blocks = validBlocks;
+    console.log('Saving page with blocks:', pageCopy);
     
-    if (!pageToSave.id) {
+    if (!pageCopy.id) {
       // Create new page
-      this.createNewPage(pageToSave);
+      this.createNewPage(pageCopy);
     } else {
       // Update existing page
-      this.updateExistingPage(pageToSave);
+      this.updateExistingPage(pageCopy);
     }
   }
   
   private createNewPage(pageToSave: Page, retryCount = 0) {
+    // Debug: Log blocks before creating page
+    console.log('Creating page with blocks:', pageToSave.blocks);
+    
+    if (pageToSave.blocks && pageToSave.blocks.length > 0) {
+      pageToSave.blocks.forEach((block, index) => {
+        console.log(`Block ${index} before creating:`, 
+          'ID:', block.id,
+          'Type:', block.type,
+          'Content:', typeof block.content === 'string' ? 
+            block.content : 
+            JSON.stringify(block.content)
+        );
+      });
+    }
+    
     this.pageService.createPage(pageToSave).subscribe({
       next: (createdPage) => {
         console.log('Page created successfully:', createdPage);
-        this.page = createdPage;
+        this.saveInProgress = false;
+        
+        // Debug: Log the received page
+        console.log('Received created page:', {
+          id: createdPage.id,
+          title: createdPage.title,
+          blockCount: createdPage.blocks?.length || 0
+        });
+        
+        // Create a deep copy to ensure no reference issues
+        Object.assign(this.page, createdPage);
+        this.draftService.setDraft(this.page);
+        // Sync page links
+        this.pageLinkApi.syncLinks(this.page.id!, this.page.blocks).subscribe();
         this.router.navigate(['/page', createdPage.id]);
       },
       error: (error) => {
         console.error('Error creating page:', error);
+        this.saveInProgress = false;
         
         if (retryCount < 2) {
           console.log(`Retrying create page (attempt ${retryCount + 1})...`);
@@ -221,13 +318,43 @@ export class PageEditorComponent implements OnInit {
   }
   
   private updateExistingPage(pageToSave: Page, retryCount = 0) {
+    console.log('About to save page with blocks:', pageToSave.blocks);
+    
+    // Debug: Log content of blocks before sending
+    if (pageToSave.blocks && pageToSave.blocks.length > 0) {
+      pageToSave.blocks.forEach((block, index) => {
+        console.log(`Block ${index} before sending:`, 
+          'ID:', block.id,
+          'Type:', block.type,
+          'Content:', typeof block.content === 'string' ? 
+            block.content : 
+            JSON.stringify(block.content)
+        );
+      });
+    }
+    
     this.pageService.savePage(pageToSave).subscribe({
       next: (updatedPage) => {
         console.log('Page updated successfully:', updatedPage);
-        this.page = updatedPage;
+        this.saveInProgress = false;
+        
+        // Debug: Log the received page
+        console.log('Received updated page:', {
+          id: updatedPage.id,
+          title: updatedPage.title,
+          blockCount: updatedPage.blocks?.length || 0
+        });
+        
+        // Only update the page reference after successful save
+        // Create a deep copy to ensure no reference issues
+        Object.assign(this.page, updatedPage);
+        this.draftService.setDraft(this.page);
+        // Sync page links
+        this.pageLinkApi.syncLinks(this.page.id!, this.page.blocks).subscribe();
       },
       error: (error) => {
         console.error('Error saving page:', error);
+        this.saveInProgress = false;
         
         if (retryCount < 2) {
           console.log(`Retrying save page (attempt ${retryCount + 1})...`);
@@ -269,5 +396,10 @@ export class PageEditorComponent implements OnInit {
 
   trackByBlockId(index: number, block: Block): string {
     return block.id;
+  }
+
+  private initializeBlocksForm(blocks: Block[]) {
+    this.blocks.clear();
+    blocks.forEach(b => this.blocks.push(BlockFormUtil.createBlockGroup(this.fb, b)));
   }
 } 

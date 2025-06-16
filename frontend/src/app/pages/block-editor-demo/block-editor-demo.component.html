@@ -4,7 +4,6 @@
     <ng-container *ngFor="let block of blocks; let i = index">
       <app-block
         [block]="block"
-        (update)="onBlockUpdate(i, $event)"
         (remove)="onBlockRemove(i)"
         (addBelow)="onBlockAddBelow(i)"
         (keydown)="onBlockKeyDown($event, i)">
