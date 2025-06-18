@@ -5,13 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6b67bc0e-7349-472e-9dd9-c0a01502cc99" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/components/backlinks-panel/backlinks-panel.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/components/backlinks-panel/backlinks-panel.component.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/components/backlinks-panel/backlinks-panel.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/components/backlinks-panel/backlinks-panel.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/components/block/block.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/components/block/block.component.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/components/page-editor/page-editor.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/components/page-editor/page-editor.component.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/components/page-editor/page-editor.component.scss" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/components/page-editor/page-editor.component.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/components/page-editor/page-editor.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/components/page-editor/page-editor.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/app/services/page-link-api.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/services/page-link-api.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/components/home/home.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/components/home/home.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/components/home/home.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/components/home/home.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/components/login/login.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/components/login/login.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/components/workspace/workspace.component.scss" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/components/workspace/workspace.component.scss" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -101,7 +99,7 @@
       <updated>1749990527891</updated>
       <workItem from="1749990545317" duration="342000" />
       <workItem from="1749990920075" duration="4840000" />
-      <workItem from="1750002574721" duration="41886000" />
+      <workItem from="1750002574721" duration="43223000" />
     </task>
     <servers />
   </component>
